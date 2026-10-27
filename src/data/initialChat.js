@@ -2,7 +2,7 @@ export const initialChatMessages = [
   {
     id: "msg-1",
     sender: "nita",
-    senderName: "Bu Nita",
+    senderName: "Bu Nita AI",
     time: "08:42 WIB",
     text: "Halo Bu Nurhayati! Pilihan bijak menyisihkan lele segar untuk si kecil Faris. Ini resep praktis & padat gizi untuk cegah stunting:",
     voiceNote: {
@@ -13,7 +13,7 @@ export const initialChatMessages = [
   {
     id: "msg-2",
     sender: "nita",
-    senderName: "Bu Nita",
+    senderName: "Bu Nita AI",
     time: "08:43 WIB",
     recipeCard: {
       tag: "Menu Cegah Stunting • 20 Menit",
@@ -39,7 +39,7 @@ export const initialChatMessages = [
   {
     id: "msg-4",
     sender: "nita",
-    senderName: "Bu Nita",
+    senderName: "Bu Nita AI",
     time: "08:45 WIB",
     text: "Tahan 5 hari di toples tertutup rapat ya Bu! Sangat cocok untuk stok makan harian si kecil Faris.",
     voiceNote: {

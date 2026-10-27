@@ -278,10 +278,10 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
         </header>
 
         <section className="chat-person">
-          <img src={ASSETS.nitaAvatar} alt="Bu Nita" />
+          <img src={ASSETS.nitaAvatar} alt="Bu Nita AI" />
           <div>
             <h1>
-              Bu Nita <span>Konselor Gizi</span>
+              Bu Nita AI <span>Asisten Gizi RAG</span>
             </h1>
             <p>Panduan Pangan &amp; Gizi Keluarga • {city}</p>
           </div>

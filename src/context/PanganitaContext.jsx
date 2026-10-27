@@ -373,7 +373,7 @@ export function PanganitaProvider({ children }) {
         const nitaMsg = {
           id: `nita-${Date.now()}`,
           sender: "nita",
-          senderName: result.data.sender || "Bu Nita",
+          senderName: result.data.sender || "Bu Nita AI",
           time:
             result.data.time ||
             new Intl.DateTimeFormat("id-ID", {
@@ -399,7 +399,7 @@ export function PanganitaProvider({ children }) {
       const nitaMsg = {
         id: `nita-${Date.now()}`,
         sender: "nita",
-        senderName: "Bu Nita",
+        senderName: "Bu Nita AI",
         time:
           new Intl.DateTimeFormat("id-ID", {
             hour: "2-digit",
