@@ -640,6 +640,7 @@ export function searchKnowledgeBase(query, topK = 3) {
 
 /**
  * Fallback response cerdas jika Gemini API mengalami kendala jaringan atau kuota habis
+ * Format: 1 kalimat sapaan ramah + emoji, spasi antar paragraf lega, dan poin ber-emoji
  */
 export function getFallbackResponse(query, motherName = "Ibu") {
   const lower = (query || "").toLowerCase();
@@ -651,90 +652,12 @@ export function getFallbackResponse(query, motherName = "Ibu") {
     lower.includes("basi") ||
     lower.includes("awet")
   ) {
-    return "Menurut Buku Panduan Panganita halaman 12, olahan abon lele kering tahan hingga 5 sampai 7 hari pada suhu ruang di dalam toples kaca kedap udara yang bersih dan kering. Jika disimpan di kulkas atau freezer dalam wadah tertutup rapat, daya tahannya bisa mencapai 1 bulan tanpa bahan pengawet sintetik ya " + motherName + ".";
-  }
-
-  if (
-    lower.includes("kembung") ||
-    lower.includes("omega") ||
-    lower.includes("dha")
-  ) {
-    return "Berdasarkan data TKPI Kemenkes RI di halaman 4, ikan kembung memiliki kandungan Omega 3 dan DHA mencapai 2,2 gram per 100 gram, bahkan lebih tinggi daripada ikan salmon impor. Sangat bagus untuk pembentukan sinapsis sel saraf otak anak pada masa 1.000 Hari Pertama Kehidupan.";
-  }
-
-  if (
-    lower.includes("lele") ||
-    lower.includes("tambak") ||
-    lower.includes("kolam")
-  ) {
-    return "Berdasarkan panduan gizi halaman 3, ikan lele segar mengandung 18 gram protein per 100 gram dengan asam amino esensial lengkap dan tekstur daging lembut yang mudah dicerna balita. Cukup berikan 1 potong sedang lele per hari untuk mencukupi kebutuhan protein harian si kecil ya " + motherName + ".";
-  }
-
-  if (
-    lower.includes("udang") ||
-    lower.includes("kalsium") ||
-    lower.includes("seng")
-  ) {
-    return "Merujuk pada halaman 5 panduan gizi, udang air tawar maupun tambak Teluk Bintuni kaya akan seng atau zinc sebesar 1,3 miligram dan kalsium yang berfungsi memicu hormon pertumbuhan linier tulang balita untuk mencegah perawakan pendek atau stunting.";
-  }
-
-  if (
-    lower.includes("tongkol") ||
-    lower.includes("laut")
-  ) {
-    return "Menurut data resmi halaman 6, ikan tongkol kaya protein 21 gram per 100 gram dan zat besi untuk mencegah anemia. Pastikan diolah selagi segar dengan membuang insang dan darahnya agar tidak menimbulkan gatal alergi pada balita.";
-  }
-
-  if (
-    lower.includes("gurame")
-  ) {
-    return "Berdasarkan halaman 7, ikan gurame pekarangan memiliki serat daging putih yang sangat halus dan rasa gurih alami. Sangat cocok diolah menjadi sup bening atau bola-bola ikan kukus untuk anak yang sedang mogok makan atau GTM.";
-  }
-
-  if (
-    lower.includes("buah naga") ||
-    lower.includes("antioksidan") ||
-    lower.includes("sembelit")
-  ) {
-    return "Berdasarkan panduan halaman 8, buah naga merah kaya serat prebiotik dan antioksidan antosianin untuk menjaga kesehatan saluran cerna balita serta melancarkan buang air besar tanpa rasa asam berlebih.";
-  }
-
-  if (
-    lower.includes("pisang") ||
-    lower.includes("kalium")
-  ) {
-    return "Merujuk pada halaman 8, pisang lokal sangat kaya kalium dan karbohidrat lembut alami yang ramah di lambung bayi usia 6 bulan ke atas sebagai makanan pendamping ASI awal yang aman.";
-  }
-
-  if (
-    lower.includes("tomat") ||
-    lower.includes("likopen")
-  ) {
-    return "Menurut data gizi halaman 8, tomat mengandung likopen dan vitamin C tinggi yang membantu penyerapan zat besi dari ikan dan sayuran agar anak tidak mudah lemas dan terhindar dari anemia.";
-  }
-
-  if (
-    lower.includes("singkong") ||
-    lower.includes("ubi") ||
-    lower.includes("jagung")
-  ) {
-    return "Berdasarkan modul pangan pokok lokal halaman 9, jagung, singkong, dan ubi jalar ungu lokal Teluk Bintuni merupakan sumber karbohidrat kompleks rendah gula yang padat vitamin A beta karoten, sangat ideal menggantikan beras untuk variasi menu keluarga.";
-  }
-
-  if (
-    lower.includes("bayam") ||
-    lower.includes("kangkung") ||
-    lower.includes("sayur") ||
-    lower.includes("zat besi")
-  ) {
-    return "Menurut panduan sayuran pekarangan halaman 10, bayam dan kangkung kaya zat besi dan folat. Masak sebentar saja kurang dari 3 menit setelah air mendidih agar kandungan vitamin C dan mineral alaminya tidak larut dan hilang.";
-  }
-
-  if (
-    lower.includes("telur") ||
-    lower.includes("kolin")
-  ) {
-    return "Berdasarkan rujukan Permenkes No. 28/2019 pada halaman 11, satu butir telur ayam ras menyumbang 6 gram protein bernilai biologis tinggi serta kolin untuk kecerdasan memori si kecil. Memberikan 1 butir telur setiap hari terbukti menurunkan risiko stunting hingga 47 persen.";
+    return "Halo " + motherName + "! Senang sekali bisa berbagi tips penyimpanan hasil panen pekarangan 🥰✨\n\n" +
+      "Menurut Buku Panduan Panganita Halaman 12, abon lele kering tahan disimpan:\n\n" +
+      "🏠 5 sampai 7 hari pada suhu ruang di dalam toples kaca kedap udara yang bersih.\n\n" +
+      "❄️ Hingga 1 bulan jika disimpan di kulkas atau freezer dalam wadah tertutup rapat.\n\n" +
+      "💡 Tips: Sangrai abon hingga benar-benar kering tanpa sisa minyak agar tidak mudah tengik ya Bu.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 12 & Standar Pengolahan Pangan Lokal.";
   }
 
   if (
@@ -743,7 +666,51 @@ export function getFallbackResponse(query, motherName = "Ibu") {
     lower.includes("mpasi") ||
     lower.includes("menu")
   ) {
-    return "Untuk menu MPASI padat gizi, kukus daging ikan lele atau kembung segar hingga matang lalu suwir halus bebas duri. Padukan dengan kaldu bumbu kuning alami, daun kelor atau bayam cincang, dan sedikit santan segar agar vitamin A dan zat besinya terserap optimal ya " + motherName + ".";
+    return "Halo " + motherName + "! Senang sekali bisa membersamai Ibu menyiapkan menu MPASI padat gizi untuk si kecil 🥰✨\n\n" +
+      "Untuk bayi usia 7 bulan, tekstur yang tepat adalah bubur kental saring lumat:\n\n" +
+      "🐟 2 sendok makan ikan lele kukus suwir bebas duri (kaya Omega-3 otak).\n\n" +
+      "🍚 2 sendok makan bubur beras atau jagung manis halus.\n\n" +
+      "🌿 1 sendok makan bayam atau wortel cincang halus.\n\n" +
+      "🥣 1 sendok teh santan segar atau minyak kelapa alami sebagai lemak tambahan.\n\n" +
+      "✨ Masak hingga matang dan saring hangat kuku sebelum disajikan.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 5-6 & Standar AKG Permenkes No. 28/2019.";
+  }
+
+  if (
+    lower.includes("kembung") ||
+    lower.includes("omega") ||
+    lower.includes("dha")
+  ) {
+    return "Halo " + motherName + "! Ikan kembung adalah superfood lokal kebanggaan kita semua 🥰🐟\n\n" +
+      "Berdasarkan data TKPI Kemenkes RI Halaman 4, ikan kembung memiliki:\n\n" +
+      "🧠 Omega-3 dan DHA 2,2 gram per 100 gram (bahkan lebih tinggi dari salmon impor!).\n\n" +
+      "💪 Protein 21,3 gram per 100 gram untuk pembentukan sel dan pencegahan stunting.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 4 & TKPI Kemenkes RI.";
+  }
+
+  if (
+    lower.includes("lele") ||
+    lower.includes("tambak") ||
+    lower.includes("kolam")
+  ) {
+    return "Halo " + motherName + "! Ikan lele kolam pekarangan adalah pilihan sangat tepat untuk lauk keluarga 🥰🐟\n\n" +
+      "Merujuk Buku Panduan Panganita Halaman 3:\n\n" +
+      "🐟 Mengandung 18 gram protein per 100 gram dengan asam amino esensial lengkap.\n\n" +
+      "👶 Serat otot lele sangat pendek dan lunak sehingga paling cepat dicerna lambung balita.\n\n" +
+      "🥣 Cukup 1 potong sedang lele per hari untuk mencukupi kebutuhan protein harian si kecil.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 3 & Data Gizi Kemenkes RI.";
+  }
+
+  if (
+    lower.includes("udang") ||
+    lower.includes("kalsium") ||
+    lower.includes("seng")
+  ) {
+    return "Halo " + motherName + "! Udang segar kaya akan mineral penting untuk pertumbuhan tinggi badan si kecil 🥰🦐\n\n" +
+      "Berdasarkan Buku Panduan Panganita Halaman 5:\n\n" +
+      "🦴 Kaya seng atau zinc 1,3 mg dan kalsium alami untuk memicu pertumbuhan linier tulang balita.\n\n" +
+      "👶 Cincang halus udang dan pastikan tidak ada alergi saat pertama kali mengenalkannya pada si kecil.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 5 & Pedoman Gizi Seimbang.";
   }
 
   if (
@@ -752,17 +719,16 @@ export function getFallbackResponse(query, motherName = "Ibu") {
     lower.includes("berat") ||
     lower.includes("tinggi")
   ) {
-    return "Kunci utama pencegahan stunting pada masa 1.000 Hari Pertama Kehidupan adalah konsistensi asupan protein hewani setiap hari seperti ikan, udang, dan telur, didampingi ASI eksklusif dan sanitasi air bersih. Memanfaatkan hasil panen pekarangan sendiri jauh lebih hemat, higienis, dan terjamin kesegarannya ya " + motherName + ".";
+    return "Halo " + motherName + "! Semangat hebat Ibu merawat tumbuh kembang anak adalah kunci utama bebas stunting 🥰✨\n\n" +
+      "Kunci pencegahan stunting di 1.000 Hari Pertama Kehidupan:\n\n" +
+      "🐟 Konsistensi 1 sumber protein hewani setiap hari (ikan, udang, telur pekarangan).\n\n" +
+      "🌿 Padukan sayuran hijau kaya zat besi untuk cegah anemia.\n\n" +
+      "💧 Pastikan sanitasi air bersih dan cuci tangan teratur di rumah.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 1-2 & Kemenkes RI.";
   }
 
-  if (
-    lower.includes("gtm") ||
-    lower.includes("makan") ||
-    lower.includes("nafsu") ||
-    lower.includes("susah")
-  ) {
-    return "Jika si kecil sedang gerakan tutup mulut atau GTM, coba variasikan bentuk dan aroma penyajiannya, " + motherName + ". Misalnya olah ikan menjadi abon lele wangi, perkedel jagung ikan gurame kukus, atau sempol udang lembut yang mudah dipegang sendiri oleh tangan mungil anak.";
-  }
-
-  return "Terima kasih " + motherName + " sudah berkonsultasi dengan Bu Nita AI. Berdasarkan Buku Panduan Panganita dan standar gizi Kemenkes RI, menjaga asupan protein hewani pekarangan seperti lele, kembung, udang, telur, serta sayuran segar setiap hari sangat efektif mendukung tumbuh kembang optimal anak dan mencegah stunting di Teluk Bintuni. Silakan tanyakan resep atau takaran spesifik yang " + motherName + " perlukan ya!";
+  return "Halo " + motherName + "! Senang sekali bisa mendampingi Ibu mengoptimalkan gizi keluarga tercinta 🥰✨\n\n" +
+    "Berdasarkan Buku Panduan Panganita dan standar gizi Kemenkes RI, menjaga asupan protein hewani pekarangan (lele, kembung, udang, telur) serta sayuran segar setiap hari sangat efektif mencegah stunting di Teluk Bintuni.\n\n" +
+    "Silakan tanyakan resep, takaran usia, atau cara penyimpanan pangan yang Ibu perlukan ya!\n\n" +
+    "📚 Rujukan: Buku Panduan Panganita & Standar AKG Permenkes No. 28/2019.";
 }

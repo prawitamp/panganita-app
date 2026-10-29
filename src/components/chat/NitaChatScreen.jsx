@@ -223,12 +223,37 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
       return;
     }
 
-    // Jika pesan suara dari Bu Nita (Text-to-Speech bahasa Indonesia)
+    // Jika pesan suara dari Bu Nita (Text-to-Speech suara ramah keibuan, bebas robot)
     if ("speechSynthesis" in window && (msg.text || msg.sender === "nita")) {
-      const cleanText = (msg.text || "").replace(/“|”/g, "");
-      const utterance = new SpeechSynthesisUtterance(cleanText || "Halo Ibu, Bu Nita siap mendengarkan.");
+      window.speechSynthesis.cancel();
+
+      // Bersihkan teks: hilangkan emoji, tanda petik, dan baris rujukan buku agar suara fokus dan alami
+      let cleanSpeechText = (msg.text || "")
+        .replace(/“|”/g, "")
+        .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
+        .replace(/📚.*$/gm, "")
+        .trim();
+
+      const utterance = new SpeechSynthesisUtterance(cleanSpeechText || "Halo Ibu, Bu Nita siap mendengarkan.");
       utterance.lang = "id-ID";
-      utterance.rate = 1.0;
+
+      // Pilih suara bahasa Indonesia alami (misal Damayanti, Google Bahasa Indonesia, atau Indonesian Female)
+      const voices = window.speechSynthesis.getVoices();
+      const idVoice = voices.find(
+        (v) =>
+          v.lang.toLowerCase().replace("_", "-").includes("id-id") ||
+          v.lang.toLowerCase().includes("id") ||
+          v.name.toLowerCase().includes("indonesia") ||
+          v.name.toLowerCase().includes("damayanti") ||
+          v.name.toLowerCase().includes("gadis")
+      );
+      if (idVoice) {
+        utterance.voice = idVoice;
+      }
+
+      // Nada lebih hangat, keibuan (pitch 1.05) dan tempo tenang tidak terburu-buru (rate 0.94)
+      utterance.pitch = 1.05;
+      utterance.rate = 0.94;
 
       utterance.onstart = () => setPlayingMessageId(msg.id);
       utterance.onend = () => setPlayingMessageId(null);
@@ -364,7 +389,19 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
                     </div>
                   )}
 
-                  {msg.text ? <p style={{ margin: "2px 0 0" }}>{msg.text}</p> : null}
+                  {msg.text ? (
+                    <div
+                      style={{
+                        margin: "6px 0 0",
+                        whiteSpace: "pre-line",
+                        lineHeight: "1.65",
+                        fontSize: "14px",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {msg.text}
+                    </div>
+                  ) : null}
                 </div>
 
                 {/* Kartu Resep Pendukung (Jika Disertakan Bersama Pesan) */}
