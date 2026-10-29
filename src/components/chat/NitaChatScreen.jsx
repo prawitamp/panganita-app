@@ -227,11 +227,12 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
     if ("speechSynthesis" in window && (msg.text || msg.sender === "nita")) {
       window.speechSynthesis.cancel();
 
-      // Bersihkan teks: hilangkan emoji, tanda petik, dan baris rujukan buku agar suara fokus dan alami
+      // Bersihkan teks: hilangkan emoji, tanda petik, baris rujukan buku, dan baris disclaimer medis agar suara tetap fokus dan alami
       let cleanSpeechText = (msg.text || "")
         .replace(/“|”/g, "")
         .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
         .replace(/📚.*$/gm, "")
+        .replace(/⚠️.*$/gm, "")
         .trim();
 
       const utterance = new SpeechSynthesisUtterance(cleanSpeechText || "Halo Ibu, Bu Nita siap mendengarkan.");
