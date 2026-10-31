@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ASSETS } from "@/constants/assets";
 import { usePanganita } from "@/context/PanganitaContext";
 import { REGIONS_BY_PROVINCE } from "@/data/indonesiaRegions";
+import { FOOD_DETECTION_MAP } from "@/data/foodDetectionMap";
 
 export default function ScannerScreen({
   setScreen,
@@ -36,7 +37,7 @@ export default function ScannerScreen({
 
   // State Harga (Rp/Kg)
   const currentPrice =
-    price !== undefined ? price : (context?.harvestPrice || "30000");
+    price !== undefined ? price : (context?.harvestPrice || "28000");
   const updatePrice = setPrice || context?.setHarvestPrice;
 
   // State Lokasi Panen / Pasar
@@ -84,7 +85,7 @@ export default function ScannerScreen({
   }, []);
 
   const weightPresets = ["0.5", "1.0", "1.5", "2.0", "2.5", "3.0", "5.0"];
-  const pricePresets = ["20000", "25000", "30000", "35000"];
+  const pricePresets = ["15000", "20000", "28000", "35000", "45000"];
 
   // Rekomendasi lokasi lokal sesuai kota pengguna
   const localSpotSuggestions = [
@@ -133,12 +134,65 @@ export default function ScannerScreen({
     handleWeightChange(String(formatted));
   };
 
-  // State Foto Panen dari Galeri / Kamera
+  // State Foto Panen & AI Detection
   const [harvestPhotoState, setHarvestPhotoState] = useState(
     context?.harvestPhoto || null
   );
   const [flashOn, setFlashOn] = useState(false);
   const galleryInputRef = useRef(null);
+
+  // AI Detection State
+  const [isScanning, setIsScanning] = useState(false);
+  const [detectionResult, setDetectionResult] = useState(null);
+  const [selectedSample, setSelectedSample] = useState("ikan_lele");
+
+  // Eksekusi Deteksi AI Computer Vision
+  const runDetection = useCallback(async ({ imageBase64, sampleClass }) => {
+    setIsScanning(true);
+    try {
+      const res = await fetch("/api/detect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image: imageBase64,
+          sampleClass: sampleClass,
+        }),
+      });
+
+      const data = await res.json();
+      if (data && data.success) {
+        setDetectionResult(data);
+        if (data.previewImage) {
+          setHarvestPhotoState(data.previewImage);
+          if (context?.setHarvestPhoto) {
+            context.setHarvestPhoto(data.previewImage);
+          }
+        }
+        if (data.primary) {
+          const meta = data.primary.metadata;
+          if (meta) {
+            if (meta.defaultWeight && updateWeight) {
+              updateWeight(meta.defaultWeight);
+            }
+            if (meta.defaultPrice && updatePrice) {
+              updatePrice(meta.defaultPrice);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Gagal mendeteksi gambar:", err);
+    } finally {
+      setIsScanning(false);
+    }
+  }, [context, updateWeight, updatePrice]);
+
+  // Initial Scan dengan sampel ikan_lele saat pertama kali buka jika belum ada foto
+  useEffect(() => {
+    if (!harvestPhotoState && !detectionResult) {
+      runDetection({ sampleClass: "ikan_lele" });
+    }
+  }, [harvestPhotoState, detectionResult, runDetection]);
 
   const handleGalleryUpload = (e) => {
     const file = e.target.files?.[0];
@@ -155,10 +209,18 @@ export default function ScannerScreen({
           if (context?.setHarvestPhoto) {
             context.setHarvestPhoto(result);
           }
+          setSelectedSample("");
+          // Picu AI inference secara langsung
+          runDetection({ imageBase64: result });
         }
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleSelectSample = (sampleKey) => {
+    setSelectedSample(sampleKey);
+    runDetection({ sampleClass: sampleKey });
   };
 
   const handleBack = () => {
@@ -167,12 +229,35 @@ export default function ScannerScreen({
   };
 
   const handleGoSimulator = () => {
+    // Sinkronkan komoditas yang terdeteksi ke profil keluarga jika belum ada
+    if (detectionResult?.primary?.metadata?.category) {
+      const cat = detectionResult.primary.metadata.category;
+      if (profile?.commodities && !profile.commodities.includes(cat) && context?.toggleCommodity) {
+        context.toggleCommodity(cat);
+      }
+    }
     if (setScreen) setScreen("simulator");
     router.push("/simulator");
   };
 
   const userAvatar = profile?.avatar || ASSETS.mamaNurAvatar;
   const userName = profile?.name || "Ibu";
+  const primaryDet = detectionResult?.primary;
+  const primaryMeta = primaryDet?.metadata || FOOD_DETECTION_MAP.ikan_lele;
+  const confidencePercent = primaryDet ? Math.round(primaryDet.confidence * 100) : 94;
+
+  const sampleButtons = [
+    { key: "ikan_lele", label: "🐟 Ikan Lele" },
+    { key: "bayam", label: "🥬 Bayam" },
+    { key: "tomat", label: "🍅 Tomat" },
+    { key: "pisang", label: "🍌 Pisang" },
+    { key: "jagung", label: "🌽 Jagung" },
+    { key: "kangkung", label: "🥬 Kangkung" },
+    { key: "ikan_kembung", label: "🐟 Kembung" },
+    { key: "udang", label: "🦐 Udang" },
+    { key: "wortel", label: "🥕 Wortel" },
+    { key: "buah_naga", label: "🐉 Buah Naga" },
+  ];
 
   return (
     <main className="scanner-page">
@@ -204,14 +289,62 @@ export default function ScannerScreen({
             alt="Hasil panen pekarangan"
             style={harvestPhotoState ? { width: "100%", height: "100%", objectFit: "cover" } : {}}
           />
+
+          {/* Animasi Laser Pemindai AI saat memproses */}
+          {isScanning && (
+            <>
+              <div className="cv-laser-bar" />
+              <div className="cv-scanning-badge">
+                <span className="cv-scanning-dot" />
+                <span>AI YOLO26n Sedang Memindai Panen...</span>
+              </div>
+            </>
+          )}
+
+          {/* Visualisasi Bounding Box Deteksi Model YOLO26n */}
+          {!isScanning && detectionResult?.detections && detectionResult.detections.length > 0 && (
+            <div className="cv-scanner-overlay">
+              {detectionResult.detections.map((det, idx) => {
+                const box = det.normalizedBox || { top: 20, left: 20, width: 60, height: 55 };
+                return (
+                  <div
+                    key={`det-${idx}`}
+                    className="cv-box-item"
+                    style={{
+                      top: `${box.top}%`,
+                      left: `${box.left}%`,
+                      width: `${box.width}%`,
+                      height: `${box.height}%`,
+                      borderColor: det.metadata?.color || "#10b981",
+                    }}
+                  >
+                    <div
+                      className="cv-box-tag"
+                      style={{ background: det.metadata?.color || "#065f46" }}
+                    >
+                      <span>{det.metadata?.icon || "🌱"}</span>
+                      <span>{det.metadata?.name || det.class}</span>
+                      <span className="cv-box-conf">
+                        {Math.round(det.confidence * 100)}%
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           <div className="camera-status">
             <span />{" "}
-            {harvestPhotoState
-              ? "Foto Panen Terpilih • Siap Dihitung"
+            {isScanning
+              ? "Sedang Menganalisis Gambar • Model YOLO26n"
+              : harvestPhotoState
+              ? `Terdeteksi: ${primaryMeta.name} • ${confidencePercent}% Akurasi`
               : flashOn
               ? "Kamera Aktif • Flash Nyala"
               : "Kamera Aktif • Foto Panen Pekarangan"}
           </div>
+
           <div className="focus focus-tl" />
           <div className="focus focus-tr" />
           <div className="focus focus-bl" />
@@ -249,11 +382,12 @@ export default function ScannerScreen({
 
           {harvestPhotoState && (
             <div className="gallery-active-banner">
-              <span>🖼️ Foto Galeri Terpilih</span>
+              <span>🖼️ Foto Panen Aktif Terpindai</span>
               <button
                 type="button"
                 onClick={() => {
                   setHarvestPhotoState(null);
+                  setDetectionResult(null);
                   if (context?.setHarvestPhoto) context.setHarvestPhoto(null);
                   if (galleryInputRef.current) galleryInputRef.current.value = "";
                 }}
@@ -265,25 +399,74 @@ export default function ScannerScreen({
 
           <div className="vision-chip">
             <img src={ASSETS.sparkleIcon} alt="" />{" "}
-            {harvestPhotoState
-              ? "Foto Panen Terpilih"
-              : "Komoditas: Ikan Lele Segar"}
+            {isScanning
+              ? "Memproses Deteksi..."
+              : `Pangan Terdeteksi: ${primaryMeta.name}`}
           </div>
 
           <div className="detection-card">
-            <div className="detection-title">
-              <h1>
-                Terdeteksi:
-                <br />
-                Ikan Segar
-              </h1>
-              <div>
-                <strong>Perkiraan: ~{currentWeight} Kg</strong>
-                <small>Estimasi wadah bakul</small>
+            {/* Attribution Badge Karya Tim */}
+            <div className="cv-model-credit">
+              <span>🔬</span>
+              <span>
+                Model CV: <strong>YOLO26n Detect v1</strong> (Karya <strong>Aulya Rakhmawati</strong>, PIC CV)
+              </span>
+            </div>
+
+            {/* Selector Sampel Cepat untuk Pengujian Langsung */}
+            <div className="cv-sample-selector">
+              <div className="cv-sample-selector-label">
+                <span>⚡ Uji Sampel Data Panen Aulya:</span>
+                <span>{sampleButtons.length} Komoditas</span>
+              </div>
+              <div className="cv-sample-scroll">
+                {sampleButtons.map((btn) => (
+                  <button
+                    key={btn.key}
+                    type="button"
+                    className={`cv-sample-btn ${selectedSample === btn.key ? "active" : ""}`}
+                    onClick={() => handleSelectSample(btn.key)}
+                    disabled={isScanning}
+                  >
+                    {btn.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <hr />
+            <div className="detection-title">
+              <div>
+                <small style={{ color: "#34d399", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  Hasil Analisis Pindai Panen
+                </small>
+                <h1 style={{ marginTop: "4px" }}>
+                  {primaryMeta.icon} {primaryMeta.name}
+                </h1>
+              </div>
+              <div>
+                <strong>Akurasi {confidencePercent}%</strong>
+                <small>Estimasi ~{currentWeight} Kg</small>
+              </div>
+            </div>
+
+            {/* Kartu Nutrisi & Panduan Stunting MPASI Sesuai Komoditas Terdeteksi */}
+            {primaryMeta?.nutrition && (
+              <div className="cv-nutrition-card">
+                <div className="cv-nutrition-header">
+                  <strong>
+                    <span>🛡️</span>
+                    <span>Pencegahan Stunting</span>
+                  </strong>
+                  <span className="cv-nutrition-badge">{primaryMeta.nutrition.protein}</span>
+                </div>
+                <p className="cv-nutrition-desc">
+                  {primaryMeta.nutrition.stuntingBenefit}
+                </p>
+                <div className="cv-nutrition-mpasi">
+                  🥣 <strong>Rekomendasi MPASI:</strong> {primaryMeta.nutrition.mpasiRecommendation}
+                </div>
+              </div>
+            )}
 
             <hr />
 
@@ -373,11 +556,11 @@ export default function ScannerScreen({
                   <input
                     type="number"
                     step="1000"
-                    min="5000"
+                    min="1000"
                     max="250000"
                     value={currentPrice}
                     onChange={(e) => updatePrice && updatePrice(e.target.value)}
-                    placeholder="30000"
+                    placeholder="28000"
                     aria-label="Harga jual per kg"
                     style={{
                       color: "#0d3829",

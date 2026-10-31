@@ -9238,3 +9238,222 @@ strong {
     transform: rotate(360deg);
   }
 }
+
+/* ========================================================
+   COMPUTER VISION SCANNER & YOLO26n DETECTION OVERLAY
+   (Karya Aulya Rakhmawati, PIC CV Kelompok 10 Malahayati)
+   ======================================================== */
+
+.cv-scanner-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cv-laser-bar {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #34d399, #10b981, #34d399, transparent);
+  box-shadow: 0 0 15px 3px rgba(52, 211, 153, 0.8), 0 0 30px 6px rgba(16, 185, 129, 0.4);
+  animation: cvLaserScan 2s ease-in-out infinite alternate;
+  border-radius: 999px;
+  z-index: 6;
+}
+
+@keyframes cvLaserScan {
+  0% {
+    top: 15%;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 65%;
+    opacity: 0.8;
+  }
+}
+
+.cv-scanning-badge {
+  position: absolute;
+  top: 135px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(6, 78, 59, 0.92);
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  color: #a7f3d0;
+  font-size: 12px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.cv-scanning-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: cvDotPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes cvDotPulse {
+  from { opacity: 0.4; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.3); }
+}
+
+.cv-box-item {
+  position: absolute;
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45), inset 0 0 12px rgba(16, 185, 129, 0.2);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.cv-box-tag {
+  position: absolute;
+  top: -28px;
+  left: -2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px 6px 6px 0;
+  background: #065f46;
+  border: 1px solid #34d399;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.cv-box-conf {
+  background: rgba(52, 211, 153, 0.25);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: #6ee7b7;
+  font-size: 10px;
+}
+
+.cv-model-credit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: #d1fae5;
+}
+
+.cv-model-credit strong {
+  color: #34d399;
+}
+
+.cv-sample-selector {
+  margin: 12px 0 16px;
+}
+
+.cv-sample-selector-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.cv-sample-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.cv-sample-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.cv-sample-btn:hover,
+.cv-sample-btn.active {
+  background: #059669;
+  border-color: #34d399;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.cv-nutrition-card {
+  margin: 14px 0 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.55), rgba(4, 120, 87, 0.35));
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.cv-nutrition-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cv-nutrition-header strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6ee7b7;
+}
+
+.cv-nutrition-badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(52, 211, 153, 0.2);
+  color: #a7f3d0;
+  font-weight: 700;
+}
+
+.cv-nutrition-desc {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.cv-nutrition-mpasi {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #cbd5e1;
+  padding: 7px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border-left: 3px solid #34d399;
+}
