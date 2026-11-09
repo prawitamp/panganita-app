@@ -689,6 +689,31 @@ export function getFallbackResponse(query, motherName = "Ibu") {
     salutation = `Halo ${motherName}! Senang sekali bisa membersamai Ibu merawat si kecil tercinta 🥰✨`;
   }
 
+  // 0. Deteksi Pertanyaan di Luar Konteks Panganita (Out-of-Scope Guardrail)
+  const outOfScopeKeywords = [
+    "presiden", "politik", "pemilu", "partai", "dpr", "menteri",
+    "coding", "program", "javascript", "python", "html", "css", "react", "bug",
+    "mobil", "motor", "bengkel", "otomotif", "bensin",
+    "saham", "crypto", "bitcoin", "investasi", "pinjol", "gaji",
+    "film", "artis", "lagu", "musik", "konser", "zodiak", "ramalan",
+    "bola", "sepakbola", "juara", "game", "gaming", "skincare", "makeup"
+  ];
+
+  const isExplicitlyOutOfScope = outOfScopeKeywords.some((kw) => combined.includes(kw));
+
+  if (isExplicitlyOutOfScope) {
+    return salutation + "\n\n" +
+      "Mohon maaf ya Bu, Bu Nita AI adalah asisten khusus edukasi gizi keluarga dan ketahanan pangan pekarangan PANGANITA untuk pencegahan stunting di 1.000 Hari Pertama Kehidupan (HPK).\n\n" +
+      "Bu Nita tidak memiliki informasi mengenai topik tersebut. Namun, Bu Nita dengan senang hati siap membantu Ibu jika ada pertanyaan seputar:\n\n" +
+      "🐟 Menu olahan dan resep MPASI ikan lokal (lele, kembung, tongkol) kaya protein.\n\n" +
+      "🥣 Cara mengatasi si kecil yang sedang susah makan (GTM) atau lemas.\n\n" +
+      "🌿 Manfaat sayuran pekarangan seperti daun kelor, bayam, singkong, dan sagu.\n\n" +
+      "🏠 Tips penyimpanan hasil panen (seperti abon lele) agar awet dan tidak cepat basi.\n\n" +
+      "Ada yang ingin Ibu tanyakan seputar gizi si kecil atau olahan pangan keluarga hari ini?\n\n" +
+      "📚 Rujukan: Mandat Bu Nita AI & Standar Edukasi Gizi Panganita" +
+      disclaimer;
+  }
+
   // 1. Pertanyaan Daya Tahan / Simpan / Awet / Toples (misal abon lele)
   if (
     combined.includes("tahan") ||

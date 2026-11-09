@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-09T22:51:44.989Z",
+  "timestamp": "2026-11-09T22:58:57.678Z",
   "total_tests": 8,
   "passed_tests": 8,
   "success_rate": "100%",
@@ -68,7 +68,7 @@
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Sugeng rawuh Ibu Sri (Banyumas)! Bingah sanget saged ndherek mbiyantu Ibu njagi kasehatan si kecil 🥰✨\n\nMenurut Buku Panduan Panganita Halaman 12, abon lele kering tahan disimpan:\n...",
-      "latency_seconds": 0.001,
+      "latency_seconds": 0.002,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,
@@ -94,7 +94,7 @@
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Sampurasun Uni Desi (Padang Pariaman)! Senang pisan tiasa ngiring ngabantosan Ibu ngarawat si kecil 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci ut...",
-      "latency_seconds": 0.002,
+      "latency_seconds": 0.001,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,
