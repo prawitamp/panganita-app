@@ -54,6 +54,7 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
   };
 
   // 1. Mulai Perekaman Suara Riil + Transkripsi Suara (Speech to Text)
+  // Kompatibel dengan semua browser: Chrome, Chrome Incognito, Firefox, Safari, Edge
   const handleStartRecording = async () => {
     try {
       if (!navigator?.mediaDevices?.getUserMedia) {
@@ -65,9 +66,23 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
       audioChunksRef.current = [];
       transcribedTextRef.current = "";
 
+      // Deteksi format audio paling kompatibel untuk browser saat ini (Firefox/Safari/Chrome)
       let mimeType = "audio/webm";
-      if (!MediaRecorder.isTypeSupported("audio/webm")) {
-        mimeType = "audio/mp4";
+      if (typeof MediaRecorder !== "undefined" && typeof MediaRecorder.isTypeSupported === "function") {
+        const preferredTypes = [
+          "audio/webm;codecs=opus",
+          "audio/webm",
+          "audio/ogg;codecs=opus",
+          "audio/ogg",
+          "audio/mp4",
+          "audio/wav",
+        ];
+        for (const t of preferredTypes) {
+          if (MediaRecorder.isTypeSupported(t)) {
+            mimeType = t;
+            break;
+          }
+        }
       }
 
       const recorder = new MediaRecorder(stream, { mimeType });
@@ -79,7 +94,7 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
         }
       };
 
-      // Jalankan Speech Recognition untuk membaca kata-kata Ibu secara real-time
+      // Jalankan Speech Recognition jika didukung browser (aman dari crash di Incognito/Firefox)
       if (typeof window !== "undefined") {
         const SpeechRecognition =
           window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -98,10 +113,19 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
               transcribedTextRef.current = text.trim();
             };
 
+            recognition.onerror = (e) => {
+              // Graceful error handling jika diblokir di Incognito/Firefox (rekaman audio tetap tersimpan)
+              console.warn("Speech recognition notice (Audio tetap direkam):", e?.error);
+            };
+
             speechRecognitionRef.current = recognition;
-            recognition.start();
+            try {
+              recognition.start();
+            } catch (startErr) {
+              console.warn("Speech recognition start skipped:", startErr);
+            }
           } catch (srErr) {
-            console.warn("Speech recognition warning:", srErr);
+            console.warn("Speech recognition init warning:", srErr);
           }
         }
       }
@@ -117,13 +141,14 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
       console.warn("Izin mikrofon gagal:", err);
       // Simulasi Voice Note jika di environment tanpa hardware mic
       const simulateVn = confirm(
-        "Akses mikrofon tidak terdeteksi atau belum diizinkan. Apakah Ibu ingin mengirim simulasi Pesan Suara (Voice Note) untuk pengujian?"
+        "Akses mikrofon tidak terdeteksi atau belum diizinkan. Apakah Ibu ingin mengirim simulasi Pesan Suara (Voice Note) dialek Papua untuk pengujian?"
       );
       if (simulateVn) {
         onSendMessage({
-          text: "“Bu Nita, apakah abon lele ini tahan disimpan berapa hari ya?”",
+          text: "“Tong pu anak ini tra mau makan papeda sama ikan lele, badan lemas sekali, ada resep ka Bu Nita?”",
           voiceNote: {
             duration: "0:09",
+            transcript: "Tong pu anak ini tra mau makan papeda sama ikan lele, badan lemas sekali, ada resep ka Bu Nita?",
             icon: "14e50.svg",
           },
         });
@@ -131,7 +156,7 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
     }
   };
 
-  // 2. Berhenti & Kirim Voice Note
+  // 2. Berhenti & Kirim Voice Note (Dukungan Audio File Utuh untuk Browser Incognito/Firefox)
   const handleStopAndSendRecording = () => {
     if (!mediaRecorderRef.current) return;
 
@@ -150,19 +175,29 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
       });
       const audioUrl = URL.createObjectURL(audioBlob);
 
-      const messageText = spokenTranscript
-        ? `“${spokenTranscript}”`
-        : `🎤 Catatan Suara Ibu (${formatTime(finalSeconds)})`;
+      // Konversi audio ke base64 agar dapat diproses oleh AI Pipeline backend / Gemini Multimodal
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Data = reader.result ? reader.result.split(",")[1] : "";
+        const messageText = spokenTranscript
+          ? `“${spokenTranscript}”`
+          : `🎤 Pesan Suara Ibu (${formatTime(finalSeconds)})`;
 
-      onSendMessage({
-        text: messageText,
-        voiceNote: {
-          audioUrl,
-          duration: formatTime(finalSeconds),
-          transcript: spokenTranscript,
-          icon: "14e50.svg",
-        },
-      });
+        onSendMessage({
+          text: messageText,
+          audioBase64: base64Data,
+          mimeType: recorder.mimeType || "audio/webm",
+          voiceNote: {
+            audioUrl,
+            audioBase64: base64Data,
+            mimeType: recorder.mimeType || "audio/webm",
+            duration: formatTime(finalSeconds),
+            transcript: spokenTranscript,
+            icon: "14e50.svg",
+          },
+        });
+      };
+      reader.readAsDataURL(audioBlob);
 
       // Matikan audio tracks
       if (recorder.stream) {
@@ -403,6 +438,28 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
                       {msg.text}
                     </div>
                   ) : null}
+
+                  {/* Lencana Indikator Dialek Terdeteksi */}
+                  {msg.dialect?.isDialect && (
+                    <div
+                      style={{
+                        marginTop: "8px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        background: "#ecfdf5",
+                        border: "1px solid #a7f3d0",
+                        padding: "3px 8px",
+                        borderRadius: "12px",
+                        fontSize: "11px",
+                        color: "#065f46",
+                        fontWeight: "700",
+                      }}
+                    >
+                      <span>🎯 Dialek Terdeteksi:</span>
+                      <span>{msg.dialect.detected.join(", ")}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Kartu Resep Pendukung (Jika Disertakan Bersama Pesan) */}
@@ -432,6 +489,97 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
             );
           })}
           <div ref={threadEndRef} />
+        </div>
+
+        {/* BARIS UJI COBA CEPAT DIALEK NUSANTARA (SOLUSI BROWSER INCOGNITO & SELURUH DIALEK DAERAH) */}
+        <div
+          style={{
+            padding: "8px 16px",
+            background: "#f0fdf4",
+            borderTop: "1px solid #bbf7d0",
+            display: "flex",
+            flexDirection: "column",
+            gap: "6px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "11px", fontWeight: "700", color: "#166534" }}>
+              🎙️ Uji Coba Suara Dialek Nusantara (Bisa Semua Browser & Incognito):
+            </span>
+            <span style={{ fontSize: "10px", color: "#15803d", fontWeight: "600" }}>
+              Klik untuk simulasi VN ⬇️
+            </span>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: "6px",
+              overflowX: "auto",
+              paddingBottom: "2px",
+              scrollbarWidth: "none",
+            }}
+          >
+            {[
+              {
+                region: "🏝️ Papua (Bintuni)",
+                text: "Tong pu anak ini tra mau makan papeda sama ikan lele, badan lemas sekali, ada resep ka Bu Nita?",
+              },
+              {
+                region: "🌾 Sunda (Banten/Jabar)",
+                text: "Bu Nita, ieu budak leutik abdi nuju tiris sareng embung tuang lele, sae teu pami dipasihan daun kelor?",
+              },
+              {
+                region: "🏯 Jawa (Jateng/Jatim)",
+                text: "Bu Nita, anak kulo mboten purun nedha lele, awake anget sanget, abon lele niku awet pinten dinten nggih?",
+              },
+              {
+                region: "🌶️ Minang (Sumbar)",
+                text: "Bu Nita, anak ambo indak namuah makan nasi jo lauk kembung, baa caronyo mangolah supayo inyo nio makan?",
+              },
+              {
+                region: "⛵ Bugis / Makassar",
+                text: "Bu Nita, anakkong teai manre lele, le'ba' mamburisi' pole, baiko naoki narekko diurungang daun kelor?",
+              },
+              {
+                region: "🌿 Banjar (Kalsel)",
+                text: "Bu Nita, anak ulun kada hakun makan iwak, panas awaknya, ada resep nang nyaman lah?",
+              },
+              {
+                region: "☀️ Kupang / NTT",
+                text: "Bu Nita, ini anak sonde mau makan kelor deng lele, badan panas karmana su?",
+              },
+            ].map((item, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => {
+                  onSendMessage({
+                    text: `“${item.text}”`,
+                    voiceNote: {
+                      duration: "0:09",
+                      transcript: item.text,
+                      icon: "14e50.svg",
+                    },
+                  });
+                }}
+                style={{
+                  fontSize: "11px",
+                  padding: "4px 10px",
+                  borderRadius: "14px",
+                  background: "#ffffff",
+                  border: "1px solid #86efac",
+                  color: "#166534",
+                  fontWeight: "600",
+                  whiteSpace: "nowrap",
+                  cursor: "pointer",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                }}
+              >
+                {item.region}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* DOCKED INPUT BAR (SEPERTI WHATSAPP DENGAN PEMBATAS BORDER ATAS) */}

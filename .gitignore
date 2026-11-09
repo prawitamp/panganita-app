@@ -45,3 +45,12 @@ Thumbs.db
 # TypeScript / Build cache
 *.tsbuildinfo
 next-env.d.ts
+
+# AI Pipeline large datasets and virtualenvs
+ai-pipeline/cv/.venv/
+ai-pipeline/cv/dataset*/
+ai-pipeline/cv/foto-mentah/
+ai-pipeline/cv/runs/
+ai-pipeline/cv/*.pt
+ai-pipeline/cv/models/
+*.pt

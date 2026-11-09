@@ -1,5 +1,6 @@
 // Knowledge Base Resmi Panganita (15 Halaman & 14 Komoditas Pangan Lokal)
 // Rujukan: TKPI Kemenkes RI, Permenkes No. 28/2019, WHO PMBA, Lokus Teluk Bintuni
+import { normalizeDialectText } from "./dialectNormalizer.js";
 
 export const KNOWLEDGE_CHUNKS = [
   {
@@ -582,13 +583,17 @@ export const KNOWLEDGE_CHUNKS = [
 
 /**
  * Fungsi Retrieval In-Memory Semantik & Kata Kunci Cerdas
+ * Dilengkapi Pemahaman Multidialek Nusantara (Papua, Sunda, Jawa, Minang, Makassar, Banjar, NTT, dll.)
  * Berjalan secepat kilat (<5ms) di Vercel Serverless Function tanpa beban model eksternal
  */
 export function searchKnowledgeBase(query, topK = 3) {
   if (!query || typeof query !== "string") return [];
 
-  const lowerQuery = query.toLowerCase();
-  const queryTokens = lowerQuery
+  // Normalisasi dialek nusantara sebelum retrieval
+  const dialectInfo = normalizeDialectText(query);
+  const combinedText = `${query} ${dialectInfo.normalizedText}`.toLowerCase();
+
+  const queryTokens = combinedText
     .replace(/[^a-zA-Z0-9\s]/g, " ")
     .split(/\s+/)
     .filter((t) => t.length > 2);
@@ -597,21 +602,36 @@ export function searchKnowledgeBase(query, topK = 3) {
     let score = 0;
     const lowerText = chunk.text.toLowerCase();
 
-    // 1. Exact phrase match bonus
-    if (lowerQuery.length > 4 && lowerText.includes(lowerQuery)) {
+    // 1. Exact phrase match bonus (query asli atau normalisasi)
+    if (query.length > 4 && lowerText.includes(query.toLowerCase())) {
+      score += 30;
+    }
+    if (dialectInfo.normalizedText.length > 4 && lowerText.includes(dialectInfo.normalizedText.toLowerCase())) {
       score += 25;
     }
 
     // 2. Keyword exact matches
     if (chunk.keywords && Array.isArray(chunk.keywords)) {
       chunk.keywords.forEach((kw) => {
-        if (lowerQuery.includes(kw)) {
-          score += 12;
+        if (combinedText.includes(kw)) {
+          score += 15;
         }
       });
     }
 
-    // 3. Token frequency match
+    // 3. Komoditas lokal yang terdeteksi dari dialek
+    if (dialectInfo.localCommodities && dialectInfo.localCommodities.length > 0) {
+      dialectInfo.localCommodities.forEach((com) => {
+        const comWords = com.toLowerCase().split(" ");
+        comWords.forEach((cw) => {
+          if (lowerText.includes(cw)) {
+            score += 18;
+          }
+        });
+      });
+    }
+
+    // 4. Token frequency match
     queryTokens.forEach((token) => {
       let count = 0;
       let pos = lowerText.indexOf(token);
@@ -640,90 +660,154 @@ export function searchKnowledgeBase(query, topK = 3) {
 
 /**
  * Fallback response cerdas jika Gemini API mengalami kendala jaringan atau kuota habis
+ * Mendukung Dialek Nusantara secara cerdas:
+ * Papua, Sunda, Jawa, Minang, Makassar, Banjar, NTT, Batak, dan Bahasa Indonesia.
  * Format: 1 kalimat sapaan ramah + emoji, spasi antar paragraf lega, poin ber-emoji, rujukan resmi, dan Penafian Medis IBM SkillsBuild
  */
 export function getFallbackResponse(query, motherName = "Ibu") {
-  const lower = (query || "").toLowerCase();
+  const dialectInfo = normalizeDialectText(query);
+  const combined = `${query} ${dialectInfo.normalizedText}`.toLowerCase();
   const disclaimer = '\n\n⚠️ Penafian Medis: Bu Nita AI adalah asisten edukasi gizi dan bukan pengganti diagnosis dokter. Tindakan medis harus selalu dikonfirmasikan dengan tenaga kesehatan di fasilitas kesehatan setempat.';
 
+  // Tentukan sapaan hangat sesuai dialek
+  let salutation = `Halo ${motherName}!`;
+  if (dialectInfo.detectedDialects.includes("Papua")) {
+    salutation = `Halo Mama ${motherName} di Teluk Bintuni! Senang sekali bisa membersamai Mama merawat si kecil tercinta 🥰✨`;
+  } else if (dialectInfo.detectedDialects.includes("Sunda")) {
+    salutation = `Sampurasun ${motherName}! Senang pisan tiasa ngiring ngabantosan Ibu ngarawat si kecil 🥰✨`;
+  } else if (dialectInfo.detectedDialects.includes("Jawa")) {
+    salutation = `Sugeng rawuh ${motherName}! Bingah sanget saged ndherek mbiyantu Ibu njagi kasehatan si kecil 🥰✨`;
+  } else if (dialectInfo.detectedDialects.includes("Minang")) {
+    salutation = `Halo ${motherName}! Sanang bana Bu Nita dapek mambantu Ibu marawat anak tacinto 🥰✨`;
+  } else if (dialectInfo.detectedDialects.includes("Makassar")) {
+    salutation = `Tabe' ${motherName}! Senang sekali Bu Nita bisa membersamai Ibu merawat tumbuh kembang buah hati 🥰✨`;
+  } else if (dialectInfo.detectedDialects.includes("Banjar")) {
+    salutation = `Halo ${motherName}! Himung banar Bu Nita kawa manulungi Ibu manjaga gizi kakanakan 🥰✨`;
+  } else if (dialectInfo.detectedDialects.includes("NusaTenggara")) {
+    salutation = `Halo Mama ${motherName}! Senang sekali Bu Nita bisa bersama Mama menjaga si buah hati tercinta 🥰✨`;
+  } else {
+    salutation = `Halo ${motherName}! Senang sekali bisa membersamai Ibu merawat si kecil tercinta 🥰✨`;
+  }
+
+  // 1. Pertanyaan Daya Tahan / Simpan / Awet / Toples (misal abon lele)
   if (
-    lower.includes("tahan") ||
-    lower.includes("simpan") ||
-    lower.includes("toples") ||
-    lower.includes("basi") ||
-    lower.includes("awet")
+    combined.includes("tahan") ||
+    combined.includes("simpan") ||
+    combined.includes("toples") ||
+    combined.includes("basi") ||
+    combined.includes("awet") ||
+    combined.includes("lawas")
   ) {
-    return "Halo " + motherName + "! Senang sekali bisa berbagi tips penyimpanan hasil panen pekarangan 🥰✨\n\n" +
+    return salutation + "\n\n" +
       "Menurut Buku Panduan Panganita Halaman 12, abon lele kering tahan disimpan:\n\n" +
       "🏠 5 sampai 7 hari pada suhu ruang di dalam toples kaca kedap udara yang bersih.\n\n" +
       "❄️ Hingga 1 bulan jika disimpan di kulkas atau freezer dalam wadah tertutup rapat.\n\n" +
-      "💡 Tips: Sangrai abon hingga benar-benar kering tanpa sisa minyak agar tidak mudah tengik ya Bu.\n\n" +
+      "💡 Tips Dapur: Sangrai abon lele hingga benar-benar kering tanpa sisa minyak agar tidak mudah tengik ya Bu.\n\n" +
       "📚 Rujukan: Buku Panduan Panganita Hlm. 12 & Standar Pengolahan Pangan Lokal" +
       disclaimer;
   }
 
+  // 2. Anak GTM / Tidak Mau Makan / Demam / Panas / Lemas
   if (
-    lower.includes("resep") ||
-    lower.includes("masak") ||
-    lower.includes("mpasi") ||
-    lower.includes("menu")
+    combined.includes("tidak mau") ||
+    combined.includes("gtm") ||
+    combined.includes("tra mau") ||
+    combined.includes("embung") ||
+    combined.includes("mboten purun") ||
+    combined.includes("indak namuah") ||
+    combined.includes("teai manre") ||
+    combined.includes("kada hakun") ||
+    combined.includes("sonde mau") ||
+    combined.includes("demam") ||
+    combined.includes("panas") ||
+    combined.includes("lemas") ||
+    combined.includes("tiris") ||
+    combined.includes("muriang") ||
+    combined.includes("anget")
   ) {
-    return "Halo " + motherName + "! Senang sekali bisa membersamai Ibu menyiapkan menu MPASI padat gizi untuk si kecil 🥰✨\n\n" +
-      "Untuk bayi usia 7 bulan, tekstur yang tepat adalah bubur kental saring lumat:\n\n" +
-      "🐟 2 sendok makan ikan lele kukus suwir bebas duri (kaya Omega-3 otak).\n\n" +
-      "🥣 2 sendok makan bubur beras atau jagung manis halus.\n\n" +
-      "🌿 1 sendok makan bayam atau wortel cincang halus.\n\n" +
-      "💧 Secukupnya kaldu ikan hangat.\n\n" +
-      "✨ Masak hingga matang dan saring hangat kuku sebelum disajikan.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 5-6 & Standar AKG Permenkes No. 28/2019" +
+    return salutation + "\n\n" +
+      "Jangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci utamanya adalah cairan dan tekstur makanan yang lembut serta mudah ditelan:\n\n" +
+      "🥣 Sup Ikan Lele atau Kembung Kuah Kuning Gurih: Berikan kuah kaldu hangat yang kaya rempah dan elektrolit alami untuk menurunkan rasa tidak nyaman di tenggorokan.\n\n" +
+      "🐟 Daging Ikan Kukus Lumat: Suwir lembut ikan bebas duri yang kaya Omega-3 dan protein cepat serap untuk memulihkan daya tahan tubuh si kecil.\n\n" +
+      "🌿 Daun Kelor Cincang Halus: Tambahkan sejumput daun kelor rebus pada kuah sup untuk mencukupi zat besi dan vitamin alami penangkal infeksi.\n\n" +
+      "💧 Berikan porsi kecil tapi sering (tiap 2 jam) dan perbanyak ASI atau air matang hangat.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 5, 8 & Modul PMBA Kemenkes RI" +
       disclaimer;
   }
 
+  // 3. Ikan Kembung & Omega-3
   if (
-    lower.includes("kembung") ||
-    lower.includes("omega") ||
-    lower.includes("dha")
+    combined.includes("kembung") ||
+    combined.includes("omega") ||
+    combined.includes("dha")
   ) {
-    return "Halo " + motherName + "! Ikan kembung adalah superfood lokal kebanggaan kita semua 🥰🐟\n\n" +
+    return salutation + "\n\n" +
+      "Ikan kembung adalah superfood lokal kebanggaan nusantara kita semua 🥰🐟\n\n" +
       "Berdasarkan data TKPI Kemenkes RI Halaman 4, ikan kembung memiliki:\n\n" +
-      "🧠 Omega-3 dan DHA 2,2 gram per 100 gram (bahkan lebih tinggi dari salmon impor!).\n\n" +
-      "💪 Protein 21,3 gram per 100 gram untuk pembentukan sel dan pencegahan stunting.\n\n" +
+      "🧠 Omega-3 dan DHA 2,2 gram per 100 gram (bahkan lebih tinggi dari ikan salmon impor!).\n\n" +
+      "💪 Protein 21,3 gram per 100 gram untuk pembentukan sel tubuh dan pencegahan stunting.\n\n" +
+      "👶 Baik diolah menjadi nugget kukus kembung sayur atau sup kuah asam untuk balita.\n\n" +
       "📚 Rujukan: Buku Panduan Panganita Hlm. 4 & TKPI Kemenkes RI" +
       disclaimer;
   }
 
+  // 4. Ikan Lele & Olahan Kolam Pekarangan
   if (
-    lower.includes("lele") ||
-    lower.includes("tambak") ||
-    lower.includes("kolam")
+    combined.includes("lele") ||
+    combined.includes("tambak") ||
+    combined.includes("kolam")
   ) {
-    return "Halo " + motherName + "! Ikan lele kolam pekarangan adalah pilihan sangat tepat untuk lauk keluarga 🥰🐟\n\n" +
+    return salutation + "\n\n" +
+      "Ikan lele kolam pekarangan adalah pilihan sangat tepat untuk lauk padat gizi keluarga 🥰🐟\n\n" +
       "Merujuk Buku Panduan Panganita Halaman 3:\n\n" +
       "🐟 Mengandung 18 gram protein per 100 gram dengan asam amino esensial lengkap.\n\n" +
       "👶 Serat otot lele sangat pendek dan lunak sehingga paling cepat dicerna lambung balita.\n\n" +
-      "🥣 Cukup 1 potong sedang lele per hari untuk mencukupi kebutuhan protein harian si kecil.\n\n" +
+      "🥣 Cukup 1 potong sedang lele suwir per hari untuk mencukupi kebutuhan protein harian si kecil.\n\n" +
       "📚 Rujukan: Buku Panduan Panganita Hlm. 3 & Data Gizi Kemenkes RI" +
       disclaimer;
   }
 
+  // 5. Daun Kelor / Sayur Pekarangan
   if (
-    lower.includes("stunting") ||
-    lower.includes("1000 hpk") ||
-    lower.includes("berat") ||
-    lower.includes("tinggi")
+    combined.includes("kelor") ||
+    combined.includes("marungga") ||
+    combined.includes("sayur") ||
+    combined.includes("anemia")
   ) {
-    return "Halo " + motherName + "! Semangat hebat Ibu merawat tumbuh kembang anak adalah kunci utama bebas stunting 🥰✨\n\n" +
-      "Kunci pencegahan stunting di 1.000 Hari Pertama Kehidupan:\n\n" +
-      "🐟 Konsistensi 1 sumber protein hewani setiap hari (ikan, udang, telur pekarangan).\n\n" +
-      "🌿 Padukan sayuran hijau kaya zat besi untuk cegah anemia.\n\n" +
-      "💧 Pastikan sanitasi air bersih dan cuci tangan teratur di rumah.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 1-2 & Kemenkes RI" +
+    return salutation + "\n\n" +
+      "Daun kelor adalah 'pohon ajaib' pekarangan yang sangat luar biasa untuk mencegah anemia dan stunting 🥰🌿\n\n" +
+      "Merujuk Buku Panduan Panganita Halaman 8:\n\n" +
+      "🌿 Daun kelor segar mengandung zat besi 25 kali lebih banyak daripada bayam biasa.\n\n" +
+      "💪 Kaya kalsium dan vitamin A untuk kepadatan tulang balita dan produksi ASI ibu menyusui.\n\n" +
+      "🥣 Cara Masak: Cukup rebus 3-5 menit saja agar nutrisinya tidak rusak, lalu cincang halus untuk campuran bubur atau sup ikan.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 8 & Standar AKG Kemenkes RI" +
       disclaimer;
   }
 
-  return "Halo " + motherName + "! Senang sekali bisa mendampingi Ibu mengoptimalkan gizi keluarga tercinta 🥰✨\n\n" +
-    "Berdasarkan Buku Panduan Panganita dan standar gizi Kemenkes RI, menjaga asupan protein hewani pekarangan (lele, kembung, udang, telur) serta sayuran segar setiap hari sangat efektif mencegah stunting di Teluk Bintuni.\n\n" +
-    "Silakan tanyakan resep, takaran usia, atau cara penyimpanan pangan yang Ibu perlukan ya!\n\n" +
+  // 6. Resep MPASI / Menu Olahan Umum
+  if (
+    combined.includes("resep") ||
+    combined.includes("masak") ||
+    combined.includes("mpasi") ||
+    combined.includes("menu") ||
+    combined.includes("olah")
+  ) {
+    return salutation + "\n\n" +
+      "Berikut panduan menu MPASI padat gizi berbasis pangan lokal pekarangan:\n\n" +
+      "🐟 2 sendok makan ikan lele atau kembung kukus suwir bebas duri (kaya Omega-3 & protein).\n\n" +
+      "🥣 2 sendok makan bubur beras, sagu, jagung manis, atau ubi jalar halus.\n\n" +
+      "🌿 1 sendok makan daun kelor atau bayam cincang lembut.\n\n" +
+      "💧 Tambahkan sedikit santan atau kaldu ikan hangat sebagai lemak tambahan sumber energi.\n\n" +
+      "✨ Masak hingga matang dan sajikan hangat kuku untuk si kecil.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Hlm. 5-6 & Standar AKG Permenkes No. 28/2019" +
+      disclaimer;
+  }
+
+  // 7. Pencegahan Stunting & Tumbuh Kembang 1.000 HPK
+  return salutation + "\n\n" +
+    "Berdasarkan Buku Panduan Panganita dan standar gizi Kemenkes RI, menjaga asupan protein hewani pekarangan (lele, kembung, telur) serta sayuran hijau segar setiap hari sangat efektif mencegah stunting sejak 1.000 Hari Pertama Kehidupan.\n\n" +
+    "Silakan tanyakan resep MPASI, cara mengatasi anak susah makan, atau masa simpan olahan pangan yang Ibu perlukan ya!\n\n" +
     "📚 Rujukan: Buku Panduan Panganita & Standar AKG Permenkes No. 28/2019" +
     disclaimer;
 }
+

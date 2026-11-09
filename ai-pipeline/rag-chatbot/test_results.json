@@ -1,0 +1,66 @@
+{
+  "r1": {
+    "question": "Berapa kandungan protein dan zat besi pada ikan lele pekarangan, dan apa manfaatnya untuk pencegahan stunting balita saya?",
+    "answer": "Halo Ibu! Senang sekali bisa membersamai Ibu merawat si kecil tercinta agar tumbuh sehat dan kuat 🥰✨\n\nIkan lele pekarangan adalah harta karun protein lokal yang sangat luar biasa untuk mencegah stunting pada balita kita di Teluk Bintuni.\n\nDalam 100 gram ikan lele, terdapat kandungan gizi penting sebagai berikut:\n\n🐟 Protein: Sekitar 18 gram untuk membangun sel tubuh dan otot si kecil.\n\n🩸 Zat Besi: Sekitar 0,3 miligram untuk mencegah kurang darah atau anemia.\n\n🧠 Lemak Sehat: Kaya akan Omega-3 untuk mendukung kecerdasan otak anak.\n\nManfaat utamanya adalah memastikan tinggi badan anak ideal sesuai usianya dan meningkatkan daya tahan tubuh agar tidak mudah sakit.\n\n💡 Tips Bu Nita: Pastikan lele dibersihkan durinya dengan teliti dan diolah menjadi tekstur lembut seperti tim atau perkedel agar mudah dicerna lambung balita.\n\nSemangat terus memberikan gizi terbaik dari pekarangan sendiri ya, Bu!\n\n📚 Rujukan: Buku Panduan Panganita Hlm. 12 & TKPI Kemenkes RI\n\n⚠️ Penafian Medis: Bu Nita AI adalah asisten edukasi gizi dan bukan pengganti diagnosis dokter. Tindakan medis harus selalu dikonfirmasikan dengan tenaga kesehatan di fasilitas kesehatan setempat.",
+    "sources": [
+      {
+        "page": 6,
+        "distance": 0.1824
+      },
+      {
+        "page": 3,
+        "distance": 0.2415
+      }
+    ],
+    "retrieval_latency": 0.0842,
+    "total_latency": 1.482
+  },
+  "r2": {
+    "question": "Anak saya baru berusia 8 bulan. Kemarin bapaknya panen lele dari kolam. Bagaimana cara mengolahnya jadi MPASI yang aman bebas duri dan disukai anak?",
+    "answer": "Halo Ibu! Senang sekali bisa membersamai Ibu merawat si kecil tercinta dengan hasil panen lele yang segar 🥰✨\n\nIbu bisa membuat Bubur Lele Gurih. Ikan lele sangat bagus untuk kecerdasan otak anak karena tinggi protein dan lemak sehat.\n\nBahan yang disiapkan:\n\n🐟 1 ekor lele ukuran sedang, ambil dagingnya saja\n\n🥣 3 sendok makan nasi putih\n\n🥕 1 iris wortel, parut halus\n\n🌿 1 siung bawang putih, geprek untuk aroma\n\n💧 250 ml air atau kaldu\n\nCara mengolah yang aman:\n\n🔪 Kukus lele utuh sebentar agar daging mudah lepas, lalu sisir dagingnya perlahan menggunakan garpu untuk memastikan tidak ada duri kecil tertinggal.\n\n🥣 Masak nasi bersama air, daging lele, wortel, dan bawang putih hingga menjadi bubur lembek.\n\n💡 Saring kasar atau lumatkan dengan punggung sendok untuk menyesuaikan tekstur anak usia 8 bulan yang mulai naik tekstur.\n\n⏰ Sajikan selagi hangat agar aroma amis tidak muncul dan anak makan dengan lahap.\n\n📚 Rujukan: Buku Panduan Panganita Hlm. 12 & TKPI Kemenkes RI\n\n⚠️ Penafian Medis: Bu Nita AI adalah asisten edukasi gizi dan bukan pengganti diagnosis dokter. Tindakan medis harus selalu dikonfirmasikan dengan tenaga kesehatan di fasilitas kesehatan setempat.",
+    "sources": [
+      {
+        "page": 6,
+        "distance": 0.1912
+      },
+      {
+        "page": 12,
+        "distance": 0.2285
+      }
+    ],
+    "retrieval_latency": 0.0795,
+    "total_latency": 1.5214
+  },
+  "r3": {
+    "question": "Alhamdulillah hasil panen lele di kolam pekarangan melimpah sampai 5 kilogram. Sebaiknya berapa kilo yang disisihkan untuk makan anak balita saya, dan sisanya bisa diolah jadi apa agar tahan lama untuk dijual?",
+    "answer": "Halo Ibu! Senang sekali bisa membersamai Ibu merawat si kecil tercinta dengan hasil panen melimpah 🥰✨\n\nUntuk kebutuhan gizi balita, Ibu cukup menyisihkan 1 sampai 1,5 kilogram lele segar untuk stok makan selama satu minggu ke depan.\n\nSisanya yang 3,5 kilogram sangat bagus diolah menjadi produk bernilai jual tinggi dan tahan lama agar tidak mubazir:\n\n🐟 Abon Lele: Kukus lele, pisahkan duri, lalu sangrai dengan bumbu kuning sampai kering agar awet berbulan-bulan.\n\n🥣 Kerupuk Kulit Lele: Goreng kulit lele sampai renyah sebagai camilan tinggi protein yang disukai anak-anak dan pembeli.\n\n🌿 Nugget Lele: Campur daging lele giling dengan sedikit tepung dan sayuran, lalu simpan di dalam pembeku (freezer).\n\n💡 Pastikan saat mengolah untuk balita, semua duri halus sudah dibuang bersih agar aman dan nyaman di lambung si kecil.\n\n📚 Rujukan: Buku Panduan Panganita Hlm. 12 & TKPI Kemenkes RI\n\n⚠️ Penafian Medis: Bu Nita AI adalah asisten edukasi gizi dan bukan pengganti diagnosis dokter. Tindakan medis harus selalu dikonfirmasikan dengan tenaga kesehatan di fasilitas kesehatan setempat.",
+    "sources": [
+      {
+        "page": 12,
+        "distance": 0.1745
+      },
+      {
+        "page": 13,
+        "distance": 0.2104
+      }
+    ],
+    "retrieval_latency": 0.0811,
+    "total_latency": 1.4532
+  },
+  "r4": {
+    "question": "Bagaimana cara memperbaiki dinamo pompa air kolam yang terbakar?",
+    "answer": "Halo Ibu! Senang sekali bisa membersamai Ibu merawat si kecil tercinta 🥰✨\n\nMohon maaf sekali ya Bu, sebagai sahabat gizi Panganita, fokus utama saya adalah membantu Ibu dalam urusan kesehatan anak dan pemenuhan gizi keluarga untuk mencegah stunting.\n\nUntuk masalah dinamo pompa air yang terbakar, sebaiknya Ibu segera menghubungi tukang servis pompa atau ahli listrik terdekat agar lebih aman dan cepat tertangani.\n\nSambil menunggu pompa diperbaiki, pastikan stok air bersih untuk memasak MPASI si kecil tetap tersedia ya Bu, agar kebersihan makanannya selalu terjaga dengan baik.\n\nJika nanti Ibu butuh inspirasi resep ikan segar dari Teluk Bintuni atau tips gizi lainnya, jangan ragu untuk bertanya kembali kepada Bu Nita. Semangat terus ya Ibu hebat!\n\n📚 Rujukan: Panduan Layanan Panganita & Standar Operasional Prosedur Bu Nita AI.\n\n⚠️ Penafian Medis: Bu Nita AI adalah asisten edukasi gizi dan bukan pengganti diagnosis dokter. Tindakan medis harus selalu dikonfirmasikan dengan tenaga kesehatan di fasilitas kesehatan setempat.",
+    "sources": [
+      {
+        "page": 1,
+        "distance": 0.3854
+      },
+      {
+        "page": 2,
+        "distance": 0.412
+      }
+    ],
+    "retrieval_latency": 0.0764,
+    "total_latency": 1.385
+  }
+}

@@ -361,11 +361,18 @@ export function PanganitaProvider({ children }) {
     setChatMessages((prev) => [...prev, userMsg]);
 
     try {
-      // Direct API call: POST /api/chat
+      // Direct API call: POST /api/chat dengan payload teks dan audio voice note
+      const payload = {
+        message: text || "",
+        audioBase64: voiceNote?.audioBase64 || input?.audioBase64 || "",
+        mimeType: voiceNote?.mimeType || input?.mimeType || "audio/webm",
+        duration: voiceNote?.duration || "",
+      };
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text || "Pesan suara dari Ibu" }),
+        body: JSON.stringify(payload),
       });
       const result = await res.json();
 
@@ -381,6 +388,8 @@ export function PanganitaProvider({ children }) {
               minute: "2-digit",
             }).format(new Date()) + " WIB",
           text: result.data.reply,
+          dialect: result.data.dialect || null,
+          sources: result.data.sources || [],
           voiceNote: {
             duration: "0:12",
             icon: "68f0c.svg",

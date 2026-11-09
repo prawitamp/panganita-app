@@ -1,0 +1,206 @@
+{
+  "timestamp": "2026-11-09T22:51:44.989Z",
+  "total_tests": 8,
+  "passed_tests": 8,
+  "success_rate": "100%",
+  "test_details": [
+    {
+      "test_id": "TC-01-PAPUA",
+      "region": "Papua (Teluk Bintuni - Lokus Panganita)",
+      "speaker": "Mama Nurhayati (Bintuni)",
+      "query": "Tong pu anak ini tra mau makan papeda sama ikan lele, badan lemas sekali, ada resep ka Bu Nita?",
+      "detected_dialect": [
+        "Papua"
+      ],
+      "normalized_query": "kami / anak kami pu anak ini tidak mau makan bubur sagu karbohidrat sama ikan lele, badan lemas lelah lesu, ada resep ka Bu Nita?",
+      "retrieved_pages": [
+        6,
+        12
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Halo Mama Mama Nurhayati (Bintuni) di Teluk Bintuni! Senang sekali bisa membersamai Mama merawat si kecil tercinta 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan ...",
+      "latency_seconds": 0.007,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-02-SUNDA",
+      "region": "Sunda (Banten / Lebak / Pandeglang)",
+      "speaker": "Ibu Enok (Pandeglang)",
+      "query": "Bu Nita, ieu budak leutik abdi nuju tiris sareng embung tuang lele, sae teu pami dipasihan daun kelor?",
+      "detected_dialect": [
+        "Sunda"
+      ],
+      "normalized_query": "Bu Nita, ieu bayi anak balita saya nuju tiris sareng GTM tidak mau makan lele, apakah bagus dan aman jika pami dipasihan daun kelor?",
+      "retrieved_pages": [
+        12
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Sampurasun Ibu Enok (Pandeglang)! Senang pisan tiasa ngiring ngabantosan Ibu ngarawat si kecil 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci utamany...",
+      "latency_seconds": 0.006,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-03-JAWA",
+      "region": "Jawa (Jawa Tengah / Jawa Timur / Banyumas)",
+      "speaker": "Ibu Sri (Banyumas)",
+      "query": "Bu Nita, anak kulo mboten purun nedha lele, awake anget sanget, abon lele niku awet pinten dinten nggih?",
+      "detected_dialect": [
+        "Jawa"
+      ],
+      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan lele, badan demam panas sanget, abon lele niku tahan disimpan berapa hari nggih?",
+      "retrieved_pages": [
+        6,
+        13
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Sugeng rawuh Ibu Sri (Banyumas)! Bingah sanget saged ndherek mbiyantu Ibu njagi kasehatan si kecil 🥰✨\n\nMenurut Buku Panduan Panganita Halaman 12, abon lele kering tahan disimpan:\n...",
+      "latency_seconds": 0.001,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-04-MINANG",
+      "region": "Minang (Sumatera Barat)",
+      "speaker": "Uni Desi (Padang Pariaman)",
+      "query": "Bu Nita, anak ambo indak namuah makan nasi jo lauk kembung, baa caronyo mangolah supayo inyo nio makan?",
+      "detected_dialect": [
+        "Sunda",
+        "Minang"
+      ],
+      "normalized_query": "Bu Nita, anak saya GTM tidak mau makan nasi jo ikan lele kembung air tawar, bagaimana caranya mangolah supayo inyo nio makan?",
+      "retrieved_pages": [
+        6,
+        12
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Sampurasun Uni Desi (Padang Pariaman)! Senang pisan tiasa ngiring ngabantosan Ibu ngarawat si kecil 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci ut...",
+      "latency_seconds": 0.002,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-05-MAKASSAR",
+      "region": "Bugis / Makassar (Sulawesi Selatan)",
+      "speaker": "Daeng Bau (Gowa / Bone)",
+      "query": "Bu Nita, anakkong teai manre lele, le'ba' mamburisi' pole, baiko naoki narekko diurungang daun kelor?",
+      "detected_dialect": [
+        "Makassar"
+      ],
+      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan lele, le'ba' demam panas badan meriang' pole, baiko naoki narekko diurungang daun kelor?",
+      "retrieved_pages": [
+        12
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Tabe' Daeng Bau (Gowa / Bone)! Senang sekali Bu Nita bisa membersamai Ibu merawat tumbuh kembang buah hati 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), k...",
+      "latency_seconds": 0.001,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-06-BANJAR",
+      "region": "Banjar (Kalimantan Selatan)",
+      "speaker": "Acil Anisah (Martapura)",
+      "query": "Bu Nita, anak ulun kada hakun makan iwak, panas awaknya, ada resep nang nyaman lah?",
+      "detected_dialect": [
+        "Banjar"
+      ],
+      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan ikan lele gabus kembung protein hewani, panas awaknya, ada resep nang nyaman lah?",
+      "retrieved_pages": [
+        6,
+        12
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Halo Acil Anisah (Martapura)! Himung banar Bu Nita kawa manulungi Ibu manjaga gizi kakanakan 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci utamanya ...",
+      "latency_seconds": 0.001,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-07-KUPANG_NTT",
+      "region": "Nusa Tenggara Timur (Kupang / Flores)",
+      "speaker": "Mama Maria (Kupang)",
+      "query": "Bu Nita, ini anak sonde mau makan kelor deng lele, badan panas karmana su?",
+      "detected_dialect": [
+        "Papua",
+        "NusaTenggara"
+      ],
+      "normalized_query": "Bu Nita, ini anak tidak mau makan kelor deng lele, badan panas bagaimana caranya?",
+      "retrieved_pages": [
+        12,
+        13
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Halo Mama Mama Maria (Kupang) di Teluk Bintuni! Senang sekali bisa membersamai Mama merawat si kecil tercinta 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM)...",
+      "latency_seconds": 0.001,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    },
+    {
+      "test_id": "TC-08-INCOGNITO_VN",
+      "region": "Semua Browser (Chrome Incognito / Firefox / Edge Raw Audio)",
+      "speaker": "Voice Note Recorder (Audio Base64 Simulator)",
+      "query": "🎤 Pesan Suara Ibu (00:09) [Audio Base64 Payload]",
+      "detected_dialect": [],
+      "normalized_query": "Bu Nita, bagaimana cara menyimpan abon lele di toples agar awet tidak basi?",
+      "retrieved_pages": [
+        6,
+        13
+      ],
+      "retrieved_chunks_count": 3,
+      "response_preview": "Halo Voice Note Recorder (Audio Base64 Simulator)! Senang sekali bisa membersamai Ibu merawat si kecil tercinta 🥰✨\n\nMenurut Buku Panduan Panganita Halaman 12, abon lele kering tah...",
+      "latency_seconds": 0.001,
+      "formatting_check": {
+        "zero_asterisks": true,
+        "zero_hashes": true,
+        "has_disclaimer": true,
+        "has_citation": true,
+        "has_emoji": true
+      },
+      "status": "PASSED"
+    }
+  ]
+}
