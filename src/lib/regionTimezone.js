@@ -70,3 +70,4 @@ export function formatRegionTime(date = new Date(), provinceOrLocation = "") {
     return `${hours}:${minutes} ${suffix}`;
   }
 }
+
