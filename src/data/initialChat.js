@@ -6,7 +6,7 @@ export const getInitialChatMessages = (location = "Kab. Teluk Bintuni, Papua Bar
     sender: "nita",
     senderName: "Bu Nita AI",
     time: formatRegionTime(new Date(), location),
-    text: "Assalamu'alaikum, Ibu! Saya Bu Nita, asisten gizi PANGANITA. Saya siap membantu Ibu memahami gizi keluarga, bahan pangan, dan pencegahan stunting. Yuk, kita belajar bersama. Ada yang ingin Ibu tanyakan?",
+    text: "Assalamu'alaikum, Ibu! Saya Bu Nita, asisten gizi Panganita. Saya siap membantu Ibu memahami gizi keluarga, bahan pangan, dan pencegahan stunting. Yuk, kita belajar bersama. Ada yang ingin Ibu tanyakan?",
     voiceNote: {
       duration: "0:14",
       icon: "68f0c.svg",
