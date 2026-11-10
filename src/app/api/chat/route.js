@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { profile } from "@/lib/db";
 import { searchKnowledgeBase, getFallbackResponse } from "@/lib/ragKnowledge";
 import { normalizeDialectText } from "@/lib/dialectNormalizer";
+import { formatRegionTime } from "@/lib/regionTimezone";
 
 /**
  * Endpoint RAG AI Chatbot Bu Nita
@@ -9,6 +10,7 @@ import { normalizeDialectText } from "@/lib/dialectNormalizer";
  * Integrasi Retrieval-Augmented Generation (RAG) resmi Panganita
  * dengan Google Gemini API, Pemahaman Multidialek Nusantara (38 Provinsi),
  * Dukungan Audio Voice Note Lintas Browser (Chrome, Firefox, Edge, Incognito),
+ * Penyelarasan Zona Waktu Daerah (WIB, WITA, WIT),
  * serta Prinsip Transparansi & Disclaimer Medis IBM SkillsBuild
  */
 export async function POST(request) {
@@ -18,6 +20,7 @@ export async function POST(request) {
     const audioBase64 = body?.audioBase64 || "";
     const mimeType = body?.mimeType || "audio/webm";
     const duration = body?.duration || "";
+    const clientLocation = body?.location || profile.location || profile.province || "Kab. Teluk Bintuni, Papua Barat";
 
     // Tangani jika pesan kosong tapi ada audio
     let userMessage = rawMessage;
@@ -71,12 +74,15 @@ PEDOMAN PEMAHAMAN DIALEK & BAHASA DAERAH NUSANTARA:
 - JEDA PARAGRAF WAJIB: Pisahkan setiap bagian paragraf dan langkah dengan DUA KALI ENTER / BARIS KOSONG (double newline).
 - POIN DENGAN EMOJI: Setiap poin bahan atau langkah resep WAJIB diawali emoticon (🐟, 🥣, 🌿, 💡, 💧).
 - DILARANG KERAS menggunakan tanda bintang (* atau **) untuk tebal/miring dan DILARANG menggunakan tanda pagar (#).
-- RUJUKAN RESMI: Cantumkan rujukan resmi singkat (contoh: '📚 Rujukan: Buku Panduan Panganita Hlm. ${sourcePages.join(", ")} & Standar AKG Kemenkes RI').
+- RUJUKAN RESMI: Cantumkan rujukan resmi singkat dengan tulisan 'Halaman' lengkap, DILARANG menyingkat jadi Hlm (contoh: '📚 Rujukan: Buku Panduan Panganita Halaman ${sourcePages.join(", ")} & Standar AKG Kemenkes RI').
 - PENAFIAN MEDIS DI AKHIR:
 '⚠️ Penafian Medis: Bu Nita AI adalah asisten edukasi gizi dan bukan pengganti diagnosis dokter. Tindakan medis harus selalu dikonfirmasikan dengan tenaga kesehatan di fasilitas kesehatan setempat.'
 5. BATASAN RUANG LINGKUP & GUARDRAIL ETIKA (OUT-OF-SCOPE REFUSAL):
-- Jika pertanyaan pengguna di luar konteks gizi, kesehatan balita, pencegahan stunting 1.000 HPK, MPASI, atau ketahanan pangan pekarangan (contoh: politik, coding, hiburan, otomotif, keuangan umum, olahraga, ramalan):
-Tolak dengan sangat santun dan hangat. Jelaskan bahwa fokus Bu Nita AI adalah mendampingi gizi dan pangan keluarga PANGANITA, lalu arahkan kembali ibu untuk berkonsultasi seputar pemenuhan gizi balita atau olahan hasil panen pekarangan.`;
+- Jika pertanyaan pengguna di luar konteks gizi, kesehatan balita, pencegahan stunting 1.000 HPK, MPASI, atau ketahanan pangan pekarangan (contoh: siapa presiden korea/negara lain, politik, coding, hiburan, otomotif, keuangan umum, olahraga, ramalan):
+Tolak dengan sangat santun dan hangat. Jelaskan bahwa fokus Bu Nita AI adalah mendampingi gizi dan pangan keluarga PANGANITA, lalu arahkan kembali ibu untuk berkonsultasi seputar pemenuhan gizi balita atau olahan hasil panen pekarangan.
+6. PERTANYAAN DI LUAR 15 KOMODITAS PANGAN LOKAL:
+- Jika ibu menanyakan bahan pangan di luar 15 komoditas pangan lokal pekarangan PANGANITA (misal: salmon impor, daging sapi, keju, apel, mie instan, boba):
+Apresiasi pertanyaannya, jelaskan ringkas fakta gizinya untuk balita secara objektif, lalu prioritaskan dan hubungkan kembali ke keunggulan 15 komoditas pangan lokal pekarangan Panganita (seperti ikan kembung yang Omega-3 nya bahkan lebih tinggi dari salmon impor, atau lele, telur ayam, dan sayur pekarangan yang jauh lebih terjangkau, segar, dan padat gizi untuk pencegahan stunting).`;
 
     let reply = "";
 
@@ -146,28 +152,18 @@ Tolak dengan sangat santun dan hangat. Jelaskan bahwa fokus Bu Nita AI adalah me
       reply = getFallbackResponse(userMessage, motherName);
     }
 
-    // 6. PEMBERSIHAN FORMAT AKHIR: Pastikan nol tanda bintang dan nol tanda pagar, serta jeda spasi rapi
+    // 6. PEMBERSIHAN FORMAT AKHIR: Pastikan nol tanda bintang, nol pagar, Hlm. diganti Halaman, jeda spasi rapi
     reply = reply
       .replace(/\*\*/g, "")
       .replace(/\*/g, "")
       .replace(/#/g, "")
+      .replace(/Hlm\./gi, "Halaman")
+      .replace(/\bHlm\b/gi, "Halaman")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
 
-    // Waktu lokal respon
-    const timezone = profile.province?.toLowerCase().includes("papua")
-      ? "WIT"
-      : profile.province?.toLowerCase().includes("sulawesi") ||
-        profile.province?.toLowerCase().includes("ntt") ||
-        profile.province?.toLowerCase().includes("bali")
-      ? "WITA"
-      : "WIB";
-
-    const currentTime =
-      new Intl.DateTimeFormat("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(new Date()) + ` ${timezone}`;
+    // Waktu lokal respon sesuai zona waktu daerah profil pengguna (WIB, WITA, WIT)
+    const currentTime = formatRegionTime(new Date(), clientLocation);
 
     return NextResponse.json({
       success: true,

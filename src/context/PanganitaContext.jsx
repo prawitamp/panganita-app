@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { usePathname } from "next/navigation";
 import { initialChatMessages } from "@/data/initialChat";
 import { ROUTES, PATH_TO_SCREEN } from "@/constants/routes";
+import { formatRegionTime } from "@/lib/regionTimezone";
 
 const SCREEN_LABELS = {
   landing: "Halaman Utama",
@@ -345,15 +346,12 @@ export function PanganitaProvider({ children }) {
 
     if (!text.trim() && !voiceNote) return;
 
+    const userLoc = profile.location || profile.province || "Kab. Teluk Bintuni, Papua Barat";
     const userMsg = {
       id: `user-${Date.now()}`,
       sender: "user",
       senderName: profile.name ? `Ibu ${profile.name}` : "Ibu",
-      time:
-        new Intl.DateTimeFormat("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(new Date()) + " WIB",
+      time: formatRegionTime(new Date(), userLoc),
       text,
       voiceNote,
     };
@@ -367,6 +365,7 @@ export function PanganitaProvider({ children }) {
         audioBase64: voiceNote?.audioBase64 || input?.audioBase64 || "",
         mimeType: voiceNote?.mimeType || input?.mimeType || "audio/webm",
         duration: voiceNote?.duration || "",
+        location: userLoc,
       };
 
       const res = await fetch("/api/chat", {
@@ -381,12 +380,7 @@ export function PanganitaProvider({ children }) {
           id: `nita-${Date.now()}`,
           sender: "nita",
           senderName: result.data.sender || "Bu Nita AI",
-          time:
-            result.data.time ||
-            new Intl.DateTimeFormat("id-ID", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }).format(new Date()) + " WIB",
+          time: result.data.time || formatRegionTime(new Date(), userLoc),
           text: result.data.reply,
           dialect: result.data.dialect || null,
           sources: result.data.sources || [],
@@ -409,11 +403,7 @@ export function PanganitaProvider({ children }) {
         id: `nita-${Date.now()}`,
         sender: "nita",
         senderName: "Bu Nita AI",
-        time:
-          new Intl.DateTimeFormat("id-ID", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }).format(new Date()) + " WIT",
+        time: formatRegionTime(new Date(), userLoc),
         text: "Terima kasih Ibu sudah berkonsultasi. Menjaga asupan gizi hewani dari pekarangan sangat ampuh untuk mencegah stunting pada si kecil.",
         voiceNote: {
           duration: "0:15",

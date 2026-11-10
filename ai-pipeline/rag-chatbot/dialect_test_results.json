@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-09T22:58:57.678Z",
+  "timestamp": "2026-11-10T12:41:56.161Z",
   "total_tests": 8,
   "passed_tests": 8,
   "success_rate": "100%",
@@ -12,14 +12,14 @@
       "detected_dialect": [
         "Papua"
       ],
-      "normalized_query": "kami / anak kami pu anak ini tidak mau makan bubur sagu karbohidrat sama ikan lele, badan lemas lelah lesu, ada resep ka Bu Nita?",
+      "normalized_query": "kami / anak kami pu anak ini tidak mau makan bubur sagu karbohidrat sama ikan lele, badan lemas sekali, ada resep ka Bu Nita?",
       "retrieved_pages": [
         6,
         12
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Halo Mama Mama Nurhayati (Bintuni) di Teluk Bintuni! Senang sekali bisa membersamai Mama merawat si kecil tercinta 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan ...",
-      "latency_seconds": 0.007,
+      "latency_seconds": 0.006,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,
@@ -43,7 +43,7 @@
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Sampurasun Ibu Enok (Pandeglang)! Senang pisan tiasa ngiring ngabantosan Ibu ngarawat si kecil 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci utamany...",
-      "latency_seconds": 0.006,
+      "latency_seconds": 0.007,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,
@@ -61,14 +61,14 @@
       "detected_dialect": [
         "Jawa"
       ],
-      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan lele, badan demam panas sanget, abon lele niku tahan disimpan berapa hari nggih?",
+      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan lele, badan demam panas sanget, abon lele niku tahan disimpan berapa hari ya / jika / yang?",
       "retrieved_pages": [
         6,
         13
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Sugeng rawuh Ibu Sri (Banyumas)! Bingah sanget saged ndherek mbiyantu Ibu njagi kasehatan si kecil 🥰✨\n\nMenurut Buku Panduan Panganita Halaman 12, abon lele kering tahan disimpan:\n...",
-      "latency_seconds": 0.002,
+      "latency_seconds": 0.001,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,
@@ -84,7 +84,6 @@
       "speaker": "Uni Desi (Padang Pariaman)",
       "query": "Bu Nita, anak ambo indak namuah makan nasi jo lauk kembung, baa caronyo mangolah supayo inyo nio makan?",
       "detected_dialect": [
-        "Sunda",
         "Minang"
       ],
       "normalized_query": "Bu Nita, anak saya GTM tidak mau makan nasi jo ikan lele kembung air tawar, bagaimana caranya mangolah supayo inyo nio makan?",
@@ -93,7 +92,7 @@
         12
       ],
       "retrieved_chunks_count": 3,
-      "response_preview": "Sampurasun Uni Desi (Padang Pariaman)! Senang pisan tiasa ngiring ngabantosan Ibu ngarawat si kecil 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci ut...",
+      "response_preview": "Halo Uni Desi (Padang Pariaman)! Sanang bana Bu Nita dapek mambantu Ibu marawat anak tacinto 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci utamanya ...",
       "latency_seconds": 0.001,
       "formatting_check": {
         "zero_asterisks": true,
@@ -136,10 +135,11 @@
       "detected_dialect": [
         "Banjar"
       ],
-      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan ikan lele gabus kembung protein hewani, panas awaknya, ada resep nang nyaman lah?",
+      "normalized_query": "Bu Nita, anak balita saya GTM tidak mau makan iwak, panas awaknya, ada resep nang nyaman lah?",
       "retrieved_pages": [
-        6,
-        12
+        11,
+        12,
+        15
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Halo Acil Anisah (Martapura)! Himung banar Bu Nita kawa manulungi Ibu manjaga gizi kakanakan 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci utamanya ...",
@@ -159,17 +159,16 @@
       "speaker": "Mama Maria (Kupang)",
       "query": "Bu Nita, ini anak sonde mau makan kelor deng lele, badan panas karmana su?",
       "detected_dialect": [
-        "Papua",
         "NusaTenggara"
       ],
-      "normalized_query": "Bu Nita, ini anak tidak mau makan kelor deng lele, badan panas bagaimana caranya?",
+      "normalized_query": "Bu Nita, ini anak GTM tidak mau makan kelor deng lele, badan panas bagaimana caranya?",
       "retrieved_pages": [
         12,
         13
       ],
       "retrieved_chunks_count": 3,
-      "response_preview": "Halo Mama Mama Maria (Kupang) di Teluk Bintuni! Senang sekali bisa membersamai Mama merawat si kecil tercinta 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM)...",
-      "latency_seconds": 0.001,
+      "response_preview": "Halo Mama Mama Maria (Kupang)! Senang sekali Bu Nita bisa bersama Mama menjaga si buah hati tercinta 🥰✨\n\nJangan cemas ya Bu, saat anak demam atau sedang mogok makan (GTM), kunci u...",
+      "latency_seconds": 0,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,
@@ -192,7 +191,7 @@
       ],
       "retrieved_chunks_count": 3,
       "response_preview": "Halo Voice Note Recorder (Audio Base64 Simulator)! Senang sekali bisa membersamai Ibu merawat si kecil tercinta 🥰✨\n\nMenurut Buku Panduan Panganita Halaman 12, abon lele kering tah...",
-      "latency_seconds": 0.001,
+      "latency_seconds": 0,
       "formatting_check": {
         "zero_asterisks": true,
         "zero_hashes": true,

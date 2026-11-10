@@ -692,6 +692,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
   // 0. Deteksi Pertanyaan di Luar Konteks Panganita (Out-of-Scope Guardrail)
   const outOfScopeKeywords = [
     "presiden", "politik", "pemilu", "partai", "dpr", "menteri",
+    "korea", "amerika", "jepang", "negara", "perang", "rusia", "ukraina",
     "coding", "program", "javascript", "python", "html", "css", "react", "bug",
     "mobil", "motor", "bengkel", "otomotif", "bensin",
     "saham", "crypto", "bitcoin", "investasi", "pinjol", "gaji",
@@ -705,12 +706,30 @@ export function getFallbackResponse(query, motherName = "Ibu") {
     return salutation + "\n\n" +
       "Mohon maaf ya Bu, Bu Nita AI adalah asisten khusus edukasi gizi keluarga dan ketahanan pangan pekarangan PANGANITA untuk pencegahan stunting di 1.000 Hari Pertama Kehidupan (HPK).\n\n" +
       "Bu Nita tidak memiliki informasi mengenai topik tersebut. Namun, Bu Nita dengan senang hati siap membantu Ibu jika ada pertanyaan seputar:\n\n" +
-      "🐟 Menu olahan dan resep MPASI ikan lokal (lele, kembung, tongkol) kaya protein.\n\n" +
+      "🐟 Menu olahan dan resep MPASI ikan lokal (lele, kembung, tongkol, dll.) kaya protein.\n\n" +
       "🥣 Cara mengatasi si kecil yang sedang susah makan (GTM) atau lemas.\n\n" +
       "🌿 Manfaat sayuran pekarangan seperti daun kelor, bayam, singkong, dan sagu.\n\n" +
       "🏠 Tips penyimpanan hasil panen (seperti abon lele) agar awet dan tidak cepat basi.\n\n" +
       "Ada yang ingin Ibu tanyakan seputar gizi si kecil atau olahan pangan keluarga hari ini?\n\n" +
       "📚 Rujukan: Mandat Bu Nita AI & Standar Edukasi Gizi Panganita" +
+      disclaimer;
+  }
+
+  // 0B. Deteksi Pertanyaan Pangan di Luar 15 Komoditas Pekarangan (misal sapi, boba, salmon, mie instan)
+  const non15FoodKeywords = [
+    "sapi", "kambing", "keju", "cokelat", "coklat", "boba", "mie instan", "indomie",
+    "susu formula", "sufor", "salmon", "apel", "pizza", "burger", "nugget sosis"
+  ];
+
+  if (non15FoodKeywords.some((kw) => combined.includes(kw))) {
+    return salutation + "\n\n" +
+      "Pertanyaan yang sangat bagus dari Ibu seputar variasi menu keluarga 🥰✨\n\n" +
+      "Bahan pangan yang Ibu tanyakan memang bisa menjadi variasi, namun untuk pencegahan stunting balita yang efektif dan hemat, Buku Panduan PANGANITA dan Kemenkes RI merekomendasikan untuk memprioritaskan 15 komoditas pangan lokal pekarangan kita:\n\n" +
+      "🐟 Protein Hewani Juara: Ikan kembung lokal memiliki kandungan Omega-3 (2,2 gram per 100g) yang bahkan lebih tinggi dari salmon impor, serta ikan lele dan telur ayam pekarangan yang proteinnya paling cepat diserap lambung balita.\n\n" +
+      "🌿 Sayuran Hijau Segar: Bayam pekarangan, kangkung, dan daun kelor kaya akan zat besi alami untuk mencegah anemia balita.\n\n" +
+      "🥣 Karbohidrat Lokal: Padukan dengan singkong, jagung manis, atau ubi jalar pekarangan yang bebas pengawet.\n\n" +
+      "💡 Pangan lokal pekarangan kita jauh lebih segar, ramah di kantong, dan terbukti sangat ampuh mencukupi kebutuhan gizi 1.000 Hari Pertama Kehidupan si kecil.\n\n" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 4, 8 & Standar AKG Kemenkes RI" +
       disclaimer;
   }
 
@@ -728,7 +747,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
       "🏠 5 sampai 7 hari pada suhu ruang di dalam toples kaca kedap udara yang bersih.\n\n" +
       "❄️ Hingga 1 bulan jika disimpan di kulkas atau freezer dalam wadah tertutup rapat.\n\n" +
       "💡 Tips Dapur: Sangrai abon lele hingga benar-benar kering tanpa sisa minyak agar tidak mudah tengik ya Bu.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 12 & Standar Pengolahan Pangan Lokal" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 12 & Standar Pengolahan Pangan Lokal" +
       disclaimer;
   }
 
@@ -756,7 +775,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
       "🐟 Daging Ikan Kukus Lumat: Suwir lembut ikan bebas duri yang kaya Omega-3 dan protein cepat serap untuk memulihkan daya tahan tubuh si kecil.\n\n" +
       "🌿 Daun Kelor Cincang Halus: Tambahkan sejumput daun kelor rebus pada kuah sup untuk mencukupi zat besi dan vitamin alami penangkal infeksi.\n\n" +
       "💧 Berikan porsi kecil tapi sering (tiap 2 jam) dan perbanyak ASI atau air matang hangat.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 5, 8 & Modul PMBA Kemenkes RI" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 5, 8 & Modul PMBA Kemenkes RI" +
       disclaimer;
   }
 
@@ -772,7 +791,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
       "🧠 Omega-3 dan DHA 2,2 gram per 100 gram (bahkan lebih tinggi dari ikan salmon impor!).\n\n" +
       "💪 Protein 21,3 gram per 100 gram untuk pembentukan sel tubuh dan pencegahan stunting.\n\n" +
       "👶 Baik diolah menjadi nugget kukus kembung sayur atau sup kuah asam untuk balita.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 4 & TKPI Kemenkes RI" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 4 & TKPI Kemenkes RI" +
       disclaimer;
   }
 
@@ -788,7 +807,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
       "🐟 Mengandung 18 gram protein per 100 gram dengan asam amino esensial lengkap.\n\n" +
       "👶 Serat otot lele sangat pendek dan lunak sehingga paling cepat dicerna lambung balita.\n\n" +
       "🥣 Cukup 1 potong sedang lele suwir per hari untuk mencukupi kebutuhan protein harian si kecil.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 3 & Data Gizi Kemenkes RI" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 3 & Data Gizi Kemenkes RI" +
       disclaimer;
   }
 
@@ -805,7 +824,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
       "🌿 Daun kelor segar mengandung zat besi 25 kali lebih banyak daripada bayam biasa.\n\n" +
       "💪 Kaya kalsium dan vitamin A untuk kepadatan tulang balita dan produksi ASI ibu menyusui.\n\n" +
       "🥣 Cara Masak: Cukup rebus 3-5 menit saja agar nutrisinya tidak rusak, lalu cincang halus untuk campuran bubur atau sup ikan.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 8 & Standar AKG Kemenkes RI" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 8 & Standar AKG Kemenkes RI" +
       disclaimer;
   }
 
@@ -824,7 +843,7 @@ export function getFallbackResponse(query, motherName = "Ibu") {
       "🌿 1 sendok makan daun kelor atau bayam cincang lembut.\n\n" +
       "💧 Tambahkan sedikit santan atau kaldu ikan hangat sebagai lemak tambahan sumber energi.\n\n" +
       "✨ Masak hingga matang dan sajikan hangat kuku untuk si kecil.\n\n" +
-      "📚 Rujukan: Buku Panduan Panganita Hlm. 5-6 & Standar AKG Permenkes No. 28/2019" +
+      "📚 Rujukan: Buku Panduan Panganita Halaman 5-6 & Standar AKG Permenkes No. 28/2019" +
       disclaimer;
   }
 
