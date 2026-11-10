@@ -27,7 +27,7 @@ export default function NitaChatScreen({ setScreen, messages = [], onSendMessage
 
   const rawLoc = profile?.location?.trim() || "";
   const locCity = rawLoc ? rawLoc.split(",")?.[0]?.trim() : "";
-  const city = locCity || profile?.city || "Kab. Pandeglang";
+  const city = locCity || profile?.city || "Kota Surakarta";
 
   // Auto-scroll ke pesan terbaru
   useEffect(() => {

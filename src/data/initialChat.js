@@ -1,6 +1,6 @@
 import { formatRegionTime } from "../lib/regionTimezone.js";
 
-export const getInitialChatMessages = (location = "Kab. Teluk Bintuni, Papua Barat") => [
+export const getInitialChatMessages = (location = "") => [
   {
     id: "welcome-nita",
     sender: "nita",

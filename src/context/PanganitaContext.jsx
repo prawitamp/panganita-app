@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { usePathname } from "next/navigation";
 import { initialChatMessages } from "@/data/initialChat";
 import { ROUTES, PATH_TO_SCREEN } from "@/constants/routes";
-import { formatRegionTime } from "@/lib/regionTimezone";
+import { formatRegionTime, extractLocationFromText } from "@/lib/regionTimezone";
 
 const SCREEN_LABELS = {
   landing: "Halaman Utama",
@@ -26,8 +26,10 @@ const SCREEN_LABELS = {
 const defaultProfile = {
   name: "",
   phone: "",
-  location: "Kab. Teluk Bintuni, Papua Barat",
-  district: "Distrik Babo",
+  location: "Kota Surakarta, Jawa Tengah",
+  city: "Kota Surakarta",
+  province: "Jawa Tengah",
+  district: "Kecamatan Banjarsari",
   avatar: "/assets/58a27.png",
   familyCondition: ["baby"],
   commodities: ["fish", "greens"],
@@ -229,6 +231,23 @@ export function PanganitaProvider({ children }) {
       .catch(() => {});
   }, []);
 
+  // Sinkronkan jam pesan sambutan Bu Nita setiap kali lokasi profil pengguna dimuat atau diperbarui
+  useEffect(() => {
+    const loc = profile?.location || profile?.province || profile?.city || "";
+    setChatMessages((prev) => {
+      if (!prev || prev.length === 0) return prev;
+      if (prev[0]?.id === "welcome-nita") {
+        const updatedTime = formatRegionTime(new Date(), loc);
+        if (prev[0].time !== updatedTime) {
+          const next = [...prev];
+          next[0] = { ...next[0], time: updatedTime };
+          return next;
+        }
+      }
+      return prev;
+    });
+  }, [profile?.location, profile?.province, profile?.city]);
+
   // Update profil secara lokal & simpan ke Direct API /api/profile
   const updateProfileData = (fields) => {
     setProfile((prev) => {
@@ -346,7 +365,19 @@ export function PanganitaProvider({ children }) {
 
     if (!text.trim() && !voiceNote) return;
 
-    const userLoc = profile.location || profile.province || "Kab. Teluk Bintuni, Papua Barat";
+    // Ekstraksi otomatis jika pengguna menyebutkan daerah dalam percakapan (misal "saya di surakarta")
+    const extractedLoc = extractLocationFromText(text);
+    if (extractedLoc && extractedLoc !== profile.location) {
+      updateProfileData({ location: extractedLoc });
+    }
+
+    const userLoc =
+      extractedLoc ||
+      profile.location ||
+      profile.province ||
+      profile.city ||
+      "Kota Surakarta, Jawa Tengah";
+
     const userMsg = {
       id: `user-${Date.now()}`,
       sender: "user",

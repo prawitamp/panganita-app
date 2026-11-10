@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { profile } from "@/lib/db";
 import { searchKnowledgeBase, getFallbackResponse } from "@/lib/ragKnowledge";
 import { normalizeDialectText } from "@/lib/dialectNormalizer";
-import { formatRegionTime } from "@/lib/regionTimezone";
+import { formatRegionTime, extractLocationFromText } from "@/lib/regionTimezone";
 
 /**
  * Endpoint RAG AI Chatbot Bu Nita
@@ -20,7 +20,13 @@ export async function POST(request) {
     const audioBase64 = body?.audioBase64 || "";
     const mimeType = body?.mimeType || "audio/webm";
     const duration = body?.duration || "";
-    const clientLocation = body?.location || profile.location || profile.province || "Kab. Teluk Bintuni, Papua Barat";
+    const extractedFromMessage = extractLocationFromText(rawMessage);
+    const clientLocation =
+      extractedFromMessage ||
+      body?.location ||
+      profile.location ||
+      profile.province ||
+      "Kota Surakarta, Jawa Tengah";
 
     // Tangani jika pesan kosong tapi ada audio
     let userMessage = rawMessage;
